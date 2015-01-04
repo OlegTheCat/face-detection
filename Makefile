@@ -2,31 +2,51 @@ CC := gcc
 C_OPTS := -Wall -Wextra -g3 -O0
 LD_OPTS :=
 
-BIN_DIR := target/
-SRC_DIR := src/
 
+BIN_DIR := target/
+
+SRC_DIR := src/
 HEADERS := $(wildcard $(SRC_DIR)*.h)
 SOURCES := $(wildcard $(SRC_DIR)*.c)
-
 OBJS := $(patsubst $(SRC_DIR)%.c, $(BIN_DIR)%.o, $(SOURCES))
+TARGET := libod.a
+BIN_TARGET := $(BIN_DIR)$(TARGET)
 
-TARGET := od
 
-$(BIN_DIR)$(TARGET) : $(OBJS)
-	$(CC) -o $@ $^ $(LD_OPTS)
+$(BIN_TARGET) : $(OBJS)
+	ar rcs $@ $^
 
 $(BIN_DIR)%.o : $(SRC_DIR)%.c
 	$(CC) -c $< $(C_OPTS) -o $@
 
-target : $(BIN_DIR)$(TARGET)
+target : $(BIN_TARGET)
 
-run : target
-	./$(BIN_DIR)$(TARGET)
+
+
+TEST_DIR := test/
+TEST_SOURCES := $(wildcard $(TEST_DIR)*.c)
+TEST_OBJS := $(patsubst $(TEST_DIR)%.c, $(BIN_DIR)%.o, $(TEST_SOURCES))
+TEST_TARGET := test
+BIN_TEST_TARGET := $(BIN_DIR)$(TEST_TARGET)
+
+
+$(BIN_DIR)%.o : $(TEST_DIR)%.c
+	$(CC) -c $< $(C_OPTS) -I$(SRC_DIR) -o $@
+
+$(BIN_TEST_TARGET) : $(BIN_TARGET) $(TEST_OBJS)
+	$(CC) -static $(TEST_OBJS) -L$(BIN_DIR) -lod -o $@
+
+test-target : $(BIN_TEST_TARGET)
+
+test-run : test-target
+	./$(BIN_TEST_TARGET)
+
+
 
 clean:
 	rm -rvf $(BIN_DIR)*
 
 check-syntax:
-	$(CC) -Wall -Wextra -o /dev/null -S ${CHK_SOURCES}
+	$(CC) $(C_OPTS) -o /dev/null -S ${CHK_SOURCES}
 
-.PHONY: check-syntax
+.PHONY: check-syntax clean run target test-target test-run
