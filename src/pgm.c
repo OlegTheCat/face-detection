@@ -20,7 +20,7 @@ PgmImage *readPgmImage (const char *filename) {
 	exit(8);
     }
 
-    printf("\nReading image file: %s\n", filename);
+    /* printf("\nReading image file: %s\n", filename); */
 
     ch = getc(in_file);
     if(ch != 'P') {
@@ -50,11 +50,11 @@ PgmImage *readPgmImage (const char *filename) {
     fscanf(in_file,"%d", &((*img).height));
     fscanf(in_file,"%d", &((*img).maxVal));
 
-    printf("\n width  = %d",(*img).width);
-    printf("\n height = %d",(*img).height);
-    printf("\n maxVal = %d",(*img).maxVal);
-    printf("\n type = %d", type);
-    printf("\n");
+    /* printf("\n width  = %d",(*img).width); */
+    /* printf("\n height = %d",(*img).height); */
+    /* printf("\n maxVal = %d",(*img).maxVal); */
+    /* printf("\n type = %d", type); */
+    /* printf("\n"); */
 
     img->data = malloc(img->width * img->height * sizeof(int));
 
@@ -68,7 +68,7 @@ PgmImage *readPgmImage (const char *filename) {
     }
 
     fclose(in_file);
-    printf("\nDone reading file.\n");
+    /* printf("\nDone reading file.\n"); */
 
     return img;
 }

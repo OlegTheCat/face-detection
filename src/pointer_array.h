@@ -11,5 +11,3 @@ typedef struct PointerArray PointerArray;
 PointerArray createPointerArray();
 void addToPointerArray(PointerArray *pa, void *p);
 void deletePointerArray(PointerArray *pa);
-
-int fileExists(const char *path);

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "minunit.h"
 
+#include "pgm_test.h"
+
 int tests_run = 0;
 
 static char *dummy() {
@@ -10,6 +12,11 @@ static char *dummy() {
 
 static char *all_tests() {
     mu_run_test(dummy);
+    mu_run_test(testReadImage);
+    mu_run_test(testCreateImage);
+    mu_run_test(testSaveImage);
+    mu_run_test(testSubImage);
+
     return 0;
 }
 

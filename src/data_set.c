@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "rect.h"
-#include "utils.h"
+#include "pointer_array.h"
 
 void readImageList(const char *filename, PgmImage ***images) {
     FILE *file;

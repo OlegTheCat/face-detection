@@ -10,5 +10,5 @@
 #define IMG_HEIGHT 24
 #define IMG_WIDTH 24
 
-#define TEST_IMG "resource/neg/neg-1475.pgm"
+#define TEST_IMG "face-detection-data/neg/neg-1475.pgm"
 
