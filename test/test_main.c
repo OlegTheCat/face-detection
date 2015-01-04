@@ -2,6 +2,7 @@
 #include "minunit.h"
 
 #include "pgm_test.h"
+#include "pointer_array_test.h"
 
 int tests_run = 0;
 
@@ -16,6 +17,8 @@ static char *all_tests() {
     mu_run_test(testCreateImage);
     mu_run_test(testSaveImage);
     mu_run_test(testSubImage);
+    mu_run_test(testCreatePointerArray);
+    mu_run_test(testAddToPointerArray);
 
     return 0;
 }

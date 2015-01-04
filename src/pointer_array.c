@@ -25,6 +25,10 @@ void addToPointerArray(PointerArray *pa, void *p) {
     pa->elements[pa->size++] = p;
 }
 
+void *getFromPointerArray(PointerArray *pa, int idx) {
+    return pa->elements[idx];
+}
+
 void deletePointerArray(PointerArray *pa) {
     if (pa->elements != NULL) free(pa->elements);
 }
