@@ -1,6 +1,8 @@
+#include "pgm.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "pgm.h"
+#include <string.h>
 
 PgmImage *readPgmImage (const char *filename) {
 
@@ -98,3 +100,43 @@ void deletePgmImage(PgmImage *img) {
     if (img->data != NULL) free(img->data);
     if (img->data != NULL) free(img);
 }
+
+PgmImage *createPgmImage(int width, int height, int maxVal) {
+    PgmImage *image;
+
+    image = malloc(sizeof(PgmImage));
+    image->data = malloc(width * height * sizeof(int));
+    memset(image->data, 0, width * height * sizeof(int));
+
+    image->width = width;
+    image->height = height;
+    image->maxVal = maxVal;
+
+    return image;
+}
+
+PgmImage *subImage(PgmImage *source, int x, int y, int w, int h) {
+    PgmImage *image;
+    int i0, i, j0, j;
+
+    if ((x + w > source->width) || (y + h > source->height)) return NULL;
+
+    image = createPgmImage(w, h, DEFAULT_MAX_VAL);
+
+    for (i = y, i0 = 0; i < y + h; i++, i0++) {
+	for (j = x, j0 = 0; j < x + w; j++, j0++) {
+	    setImgVal(image, i0, j0, imgVal(source, i, j));
+	}
+    }
+
+    return image;
+}
+
+int imgVal(PgmImage *image, int row, int col) {
+    return image->data[row * image->width + col];
+}
+
+int setImgVal(PgmImage *image, int row, int col, int val) {
+    image->data[row * image->width + col] = val;
+}
+
