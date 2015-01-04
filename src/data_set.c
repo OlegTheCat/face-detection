@@ -7,17 +7,28 @@
 #include "rect.h"
 #include "pointer_array.h"
 
-void readImageList(const char *filename, PgmImage ***images) {
+void readImageList(const char *filename,
+		   PgmImage ***images,
+		   int *images_count) {
     FILE *file;
     char line[256];
     int images_num;
     int counter;
 
-    printf("Reading images from list %s\n", filename);
+    /* printf("Reading images from list %s\n", filename); */
 
     file = fopen(filename, "rt");
+    if (file == NULL) {
+	printf("Cannot find file list %s\n", filename);
+	*images = NULL;
+	*images_count = -1;
+	return;
+    }
+
     fscanf(file, "%d", &images_num);
-    printf("Number of images = %d\n", images_num);
+    /* printf("Number of images = %d\n", images_num); */
+
+    *images_count = images_num;
 
     *images = malloc(sizeof(PgmImage *) * images_num);
 
@@ -29,11 +40,14 @@ void readImageList(const char *filename, PgmImage ***images) {
 	line[strlen(line) - 1] = '\0';
 	(*images)[counter++] = readPgmImage(line);
     }
+
+    fclose(file);
 }
 
-void subSampleImage(PgmImage *image, PgmImage ***samples,
+void subSampleImage(const PgmImage *image, PgmImage ***samples,
 		    int sample_width, int sample_height,
-		    int sample_step_x, int sample_step_y) {
+		    int sample_step_x, int sample_step_y,
+		    int *samples_count) {
 
     PointerArray samples_array;
     int x, y;
@@ -57,6 +71,6 @@ void subSampleImage(PgmImage *image, PgmImage ***samples,
 	}
     }
 
-
+    *samples_count = samples_array.size;
     *samples = (PgmImage **)samples_array.elements;
 }

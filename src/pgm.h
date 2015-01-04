@@ -11,11 +11,12 @@ struct PgmImage {
 
 typedef struct PgmImage PgmImage;
 
-int imgVal(PgmImage *image, int row, int col);
+int imgVal(const PgmImage *image, int row, int col);
 void setImgVal(PgmImage *image, int row, int col, int val);
 
 PgmImage *readPgmImage(const char *filename);
 PgmImage *createPgmImage(int width, int height, int maxVal);
-PgmImage *subImage(PgmImage *source, int x, int y, int w, int h);
-void savePgmImage(const char *filename, PgmImage *img);
+PgmImage *subImage(const PgmImage *source, int x, int y, int w, int h);
+int pgmImagesEquals(const PgmImage *img1, const PgmImage *img2);
+void savePgmImage(const char *filename, const PgmImage *img);
 void deletePgmImage(PgmImage *img);

@@ -25,7 +25,7 @@ void addToPointerArray(PointerArray *pa, void *p) {
     pa->elements[pa->size++] = p;
 }
 
-void *getFromPointerArray(PointerArray *pa, int idx) {
+void *getFromPointerArray(const PointerArray *pa, int idx) {
     return pa->elements[idx];
 }
 

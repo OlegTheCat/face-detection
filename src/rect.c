@@ -15,7 +15,7 @@ void moveRect(Rect *r, int x_offset, int y_offset) {
     r->y += y_offset;
 }
 
-int isInside(Rect *inner, Rect *outer) {
+int isInside(const Rect *inner, const Rect *outer) {
     if (inner->x < outer->x || inner->y < outer->y) return 0;
     if ((inner->x + inner->w) > (outer->x + outer->w)
 	|| (inner->y + inner->h) > (outer->y + outer->h)) return 0;

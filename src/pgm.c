@@ -74,7 +74,7 @@ PgmImage *readPgmImage (const char *filename) {
 }
 
 
-void savePgmImage(const char * filename, PgmImage *img)
+void savePgmImage(const char * filename, const PgmImage *img)
 {
     int i, j, nr, nc;
     FILE *iop;
@@ -115,7 +115,7 @@ PgmImage *createPgmImage(int width, int height, int maxVal) {
     return image;
 }
 
-PgmImage *subImage(PgmImage *source, int x, int y, int w, int h) {
+PgmImage *subImage(const PgmImage *source, int x, int y, int w, int h) {
     PgmImage *image;
     int i0, i, j0, j;
 
@@ -132,7 +132,7 @@ PgmImage *subImage(PgmImage *source, int x, int y, int w, int h) {
     return image;
 }
 
-int imgVal(PgmImage *image, int row, int col) {
+int imgVal(const PgmImage *image, int row, int col) {
     return image->data[row * image->width + col];
 }
 
@@ -140,3 +140,19 @@ void setImgVal(PgmImage *image, int row, int col, int val) {
     image->data[row * image->width + col] = val;
 }
 
+int pgmImagesEquals(const PgmImage *img1, const PgmImage *img2) {
+    int i, j;
+
+    if (img1->width != img2->width ||
+	img1->height != img2->height) return 0;
+
+    for (i = 0; i < img1->height; i++) {
+	for (j = 0; j < img1->width; j++) {
+	    if (imgVal(img1, i, j) != imgVal(img2, i, j)) {
+		return 0;
+	    }
+	}
+    }
+
+    return 1;
+}

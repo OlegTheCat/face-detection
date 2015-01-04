@@ -3,6 +3,7 @@
 
 #include "pgm_test.h"
 #include "pointer_array_test.h"
+#include "data_set_test.h"
 
 int tests_run = 0;
 
@@ -19,6 +20,8 @@ static char *all_tests() {
     mu_run_test(testSubImage);
     mu_run_test(testCreatePointerArray);
     mu_run_test(testAddToPointerArray);
+    mu_run_test(testReadImageList);
+    mu_run_test(testSubSampleImage);
 
     return 0;
 }
