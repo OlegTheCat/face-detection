@@ -33,15 +33,16 @@ BIN_TEST_TARGET := $(BIN_DIR)$(TEST_TARGET)
 $(BIN_DIR)%.o : $(TEST_DIR)%.c
 	$(CC) -c $< $(C_OPTS) -I$(SRC_DIR) -o $@
 
-$(BIN_TEST_TARGET) : $(BIN_TARGET) $(TEST_OBJS)
-	$(CC) -static $(TEST_OBJS) -L$(BIN_DIR) -lod -o $@
+$(BIN_TEST_TARGET) : $(TEST_OBJS) $(BIN_TARGET)
+	$(CC) $^ $(LD_OPTS) -o $@
 
 test-target : $(BIN_TEST_TARGET)
 
 test-run : test-target
 	./$(BIN_TEST_TARGET)
 
-
+valgrind-test-run : test-target
+	valgrind --tool=memcheck --leak-check=full ./$(BIN_TEST_TARGET)
 
 clean:
 	rm -rvf $(BIN_DIR)*

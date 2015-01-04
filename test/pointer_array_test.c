@@ -27,6 +27,8 @@ char *testAddToPointerArray() {
     *b = 20;
     *c = 30;
 
+    pa = createPointerArray();
+
     addToPointerArray(&pa, a);
     addToPointerArray(&pa, a);
     addToPointerArray(&pa, a);
