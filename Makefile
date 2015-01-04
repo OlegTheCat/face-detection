@@ -27,6 +27,6 @@ clean:
 	rm -rvf $(BIN_DIR)*
 
 check-syntax:
-	$(CC) -Wall -Wextra -o nul -S ${CHK_SOURCES}
+	$(CC) -Wall -Wextra -o /dev/null -S ${CHK_SOURCES}
 
 .PHONY: check-syntax
