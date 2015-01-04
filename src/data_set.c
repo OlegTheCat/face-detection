@@ -58,5 +58,5 @@ void subSampleImage(PgmImage *image, PgmImage ***samples,
     }
 
 
-    *samples = samples_array.elements;
+    *samples = (PgmImage **)samples_array.elements;
 }

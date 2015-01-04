@@ -12,7 +12,7 @@ struct PgmImage {
 typedef struct PgmImage PgmImage;
 
 int imgVal(PgmImage *image, int row, int col);
-int setImgVal(PgmImage *image, int row, int col, int val);
+void setImgVal(PgmImage *image, int row, int col, int val);
 
 PgmImage *readPgmImage(const char *filename);
 PgmImage *createPgmImage(int width, int height, int maxVal);

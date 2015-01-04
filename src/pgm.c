@@ -136,7 +136,7 @@ int imgVal(PgmImage *image, int row, int col) {
     return image->data[row * image->width + col];
 }
 
-int setImgVal(PgmImage *image, int row, int col, int val) {
+void setImgVal(PgmImage *image, int row, int col, int val) {
     image->data[row * image->width + col] = val;
 }
 
