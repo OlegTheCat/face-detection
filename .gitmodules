@@ -1,0 +1,3 @@
+[submodule "face-detection-data"]
+	path = face-detection-data
+	url = https://github.com/OlegTheCat/face-detection-data.git
