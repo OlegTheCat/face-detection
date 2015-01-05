@@ -39,7 +39,7 @@ float stdDev(FloatMatrix *fm) {
 
     variance = sqr_sum / (fm->cols * fm->rows) - fsqr(mean(fm));
 
-    return (variance < 0) ? sqrt(-variance) : sqrt(variance);
+    return (variance < 0) ? sqrtf(-variance) : sqrtf(variance);
 }
 
 float mean(FloatMatrix *fm) {
@@ -47,5 +47,16 @@ float mean(FloatMatrix *fm) {
 }
 
 void convertToNormalized(FloatMatrix *fm) {
-    return;
+    float std_dev;
+    int i, j;
+
+    std_dev = stdDev(fm);
+
+    if (std_dev != 0) {
+	for (i = 0; i < fm->rows; i++) {
+	    for (j = 0; j < fm->cols; j++) {
+		setMatVal(fm, i, j, matVal(fm, i, j) / std_dev);
+	    }
+	}
+    }
 }

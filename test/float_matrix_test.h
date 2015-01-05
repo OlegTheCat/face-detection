@@ -2,4 +2,4 @@
 
 char *testCreateFloatMatrix();
 char *testSetGetValues();
-
+char *testMatSum();

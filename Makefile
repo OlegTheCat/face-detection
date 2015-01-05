@@ -1,6 +1,6 @@
 CC := gcc
 C_OPTS := -Wall -Wextra -g3 -O0
-LD_OPTS :=
+LD_OPTS := -lm
 
 
 BIN_DIR := target/

@@ -26,6 +26,7 @@ static char *all_tests() {
     mu_run_test(testSubSampleImage);
     mu_run_test(testCreateFloatMatrix);
     mu_run_test(testSetGetValues);
+    mu_run_test(testMatSum);
     mu_run_test(testComputeII);
     mu_run_test(testStdDev);
     mu_run_test(testMean);
