@@ -8,8 +8,8 @@ char *testCreateFloatMatrix() {
 
     fm = createFloatMatrix(10, 20);
 
-    mu_assert("Wrong matrix width", fm->width == 10);
-    mu_assert("Wrong matrix height", fm->height == 20);
+    mu_assert("Wrong matrix cols", fm->cols == 10);
+    mu_assert("Wrong matrix rows", fm->rows == 20);
 
     deleteFloatMatrix(fm);
     return 0;
