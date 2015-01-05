@@ -2,6 +2,11 @@
 
 #include <stdio.h>
 
+inline float fsqr(float val) {
+    return val * val;
+}
+
+
 int fileExists(const char *path) {
     FILE *f;
     int exists;

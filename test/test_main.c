@@ -4,6 +4,8 @@
 #include "pgm_test.h"
 #include "pointer_array_test.h"
 #include "data_set_test.h"
+#include "float_matrix_test.h"
+#include "img_proc_test.h"
 
 int tests_run = 0;
 
@@ -22,6 +24,12 @@ static char *all_tests() {
     mu_run_test(testAddToPointerArray);
     mu_run_test(testReadImageList);
     mu_run_test(testSubSampleImage);
+    mu_run_test(testCreateFloatMatrix);
+    mu_run_test(testSetGetValues);
+    mu_run_test(testComputeII);
+    mu_run_test(testStdDev);
+    mu_run_test(testMean);
+    mu_run_test(testConvertToNormalized);
 
     return 0;
 }

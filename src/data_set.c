@@ -50,6 +50,7 @@ void subSampleImage(const PgmImage *image, PgmImage ***samples,
 		    int *samples_count) {
 
     PointerArray samples_array;
+    PgmImage *sample;
     int x, y;
 
     if (image->width <= sample_width || image->height <= sample_height) {
@@ -61,11 +62,11 @@ void subSampleImage(const PgmImage *image, PgmImage ***samples,
 
     for (y = 0; y + sample_height < image->height; y += sample_step_y) {
 	for (x = 0; x + sample_width < image->width; x += sample_step_x) {
-	    PgmImage *sample = subImage(image,
-					x,
-					y,
-					sample_width,
-					sample_height);
+	    sample = subImage(image,
+			      x,
+			      y,
+			      sample_width,
+			      sample_height);
 
 	    addToPointerArray(&samples_array, sample);
 	}

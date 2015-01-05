@@ -1,0 +1,51 @@
+#include "img_proc.h"
+
+#include <math.h>
+
+#include "utils.h"
+
+FloatMatrix *computeII(FloatMatrix *fm, int squared) {
+    FloatMatrix *ii;
+    int x, y;
+    float p1, p2, p3, p4;
+
+    ii = createFloatMatrix(fm->width + 1, fm->height + 1);
+
+    for (y = 1; y < fm->height + 1; y++) {
+	for (x = 1; x < fm->width + 1; x++) {
+
+	    p4 = matVal(fm, y - 1, x - 1);
+	    p3 = matVal(ii, y, x - 1);
+	    p2 = matVal(ii, y - 1, x);
+	    p1 = matVal(ii, y - 1, x - 1);
+
+	    setMatVal(ii, y, x, (squared ? fsqr(p4) : p4) - p1 + p3 + p2);
+	}
+    }
+
+    return ii;
+}
+
+float stdDev(FloatMatrix *fm) {
+    float sqr_sum, variance;
+    int i, j;
+
+    sqr_sum = 0;
+    for (i = 0; i < fm->height; i++) {
+	for (j = 0; j < fm->width; j++) {
+	    sqr_sum += sqr(matVal(fm, i, j));
+	}
+    }
+
+    variance = sqr_sum / (fm->width * fm->height) - sqr(mean(fm));
+
+    return (variance < 0) ? sqrt(-variance) : sqrt(variance);
+}
+
+float mean(FloatMatrix *fm) {
+    return matSum(fm) / (fm->width * fm->height);
+}
+
+void convertToNormalized(FloatMatrix *fm) {
+    return;
+}

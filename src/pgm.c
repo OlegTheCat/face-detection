@@ -97,8 +97,10 @@ void savePgmImage(const char * filename, const PgmImage *img)
 }
 
 void deletePgmImage(PgmImage *img) {
-    if (img->data != NULL) free(img->data);
-    if (img->data != NULL) free(img);
+    if (img != NULL) {
+	if (img->data != NULL) free(img->data);
+	free(img);
+    }
 }
 
 PgmImage *createPgmImage(int width, int height, int maxVal) {
