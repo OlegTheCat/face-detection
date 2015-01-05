@@ -1,6 +1,8 @@
 CC := gcc
-C_OPTS := -Wall -Wextra -g3 -O0
-LD_OPTS := -lm
+VALGRIND := valgrind
+VALGRIND_OPTS += --tool=memcheck --leak-check=full
+C_OPTS += -Wall -Wextra -Werror -g3 -O0
+LD_OPTS += -lm
 
 
 BIN_DIR := target/
@@ -42,7 +44,7 @@ test-run : test-target
 	./$(BIN_TEST_TARGET)
 
 valgrind-test-run : test-target
-	valgrind --tool=memcheck --leak-check=full ./$(BIN_TEST_TARGET)
+	$(VALGRIND) $(VALGRIND_OPTS) ./$(BIN_TEST_TARGET)
 
 clean:
 	rm -rvf $(BIN_DIR)*
@@ -50,4 +52,4 @@ clean:
 check-syntax:
 	$(CC) $(C_OPTS) -o /dev/null -S ${CHK_SOURCES}
 
-.PHONY: check-syntax clean run target test-target test-run
+.PHONY: check-syntax clean run target test-target test-run valgrind-test-run

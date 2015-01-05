@@ -1,8 +1,16 @@
 #include "img_proc_test.h"
 
+#include <stdio.h>
+
 #include "minunit.h"
 #include "img_proc.h"
+#include "utils.h"
 
+/* Returns 3x3 matrix with values
+1 2 3
+4 5 6
+7 8 9
+*/
 static FloatMatrix *getFloatMatrix() {
     FloatMatrix *fm;
 
@@ -51,13 +59,36 @@ char *testComputeII() {
 }
 
 char *testStdDev() {
+    FloatMatrix *fm;
+
+    fm = getFloatMatrix();
+
+    /* printf("stddev = %f\n", stdDev(fm)); */
+    mu_assert("Wrong stddev", floatEqualEps(stdDev(fm), 2.581989f, 0.000001f));
+
+    deleteFloatMatrix(fm);
     return 0;
 }
 
 char *testMean() {
+    FloatMatrix *fm;
+
+    fm = getFloatMatrix();
+
+    mu_assert("Wrong mean value", mean(fm) == 5);
+
+    deleteFloatMatrix(fm);
     return 0;
 }
 
 char *testConvertToNormalized() {
+    FloatMatrix *fm;
+
+    fm = getFloatMatrix();
+
+    // Just check for memory errors and leaks
+    convertToNormalized(fm);
+
+    deleteFloatMatrix(fm);
     return 0;
 }

@@ -19,7 +19,7 @@ FloatMatrix *computeII(FloatMatrix *fm, int squared) {
 	    p2 = matVal(ii, y - 1, x);
 	    p1 = matVal(ii, y - 1, x - 1);
 
-	    setMatVal(ii, y, x, (squared ? fsqr(p4) : p4) - p1 + p3 + p2);
+	    setMatVal(ii, y, x, (squared ? sqrf(p4) : p4) - p1 + p3 + p2);
 	}
     }
 
@@ -33,13 +33,13 @@ float stdDev(FloatMatrix *fm) {
     sqr_sum = 0;
     for (i = 0; i < fm->rows; i++) {
 	for (j = 0; j < fm->cols; j++) {
-	    sqr_sum += fsqr(matVal(fm, i, j));
+	    sqr_sum += sqrf(matVal(fm, i, j));
 	}
     }
 
-    variance = sqr_sum / (fm->cols * fm->rows) - fsqr(mean(fm));
+    variance = sqr_sum / (fm->cols * fm->rows) - sqrf(mean(fm));
 
-    return (variance < 0) ? sqrtf(-variance) : sqrtf(variance);
+    return sqrtf(fabsf(variance));
 }
 
 float mean(FloatMatrix *fm) {
