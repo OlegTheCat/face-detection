@@ -12,3 +12,4 @@ PointerArray createPointerArray();
 void addToPointerArray(PointerArray *pa, void *p);
 void *getFromPointerArray(const PointerArray *pa, int idx);
 void deletePointerArray(PointerArray *pa);
+void **rawArrayFromPointerArray(const PointerArray *pa);

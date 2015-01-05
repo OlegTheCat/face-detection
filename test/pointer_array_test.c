@@ -57,3 +57,30 @@ char *testAddToPointerArray() {
 
     return 0;
 }
+
+char *testRawArray() {
+    PointerArray pa;
+    int a, b;
+    int **arr;
+
+    pa = createPointerArray();
+    a = 10;
+    b = 20;
+
+    addToPointerArray(&pa, &a);
+    addToPointerArray(&pa, &a);
+    addToPointerArray(&pa, &a);
+    addToPointerArray(&pa, &b);
+    addToPointerArray(&pa, &b);
+    addToPointerArray(&pa, &b);
+
+    arr = (int **)rawArrayFromPointerArray(&pa);
+
+    mu_assert("Wrong raw array value at pos 1", *(arr[1]) == a);
+    mu_assert("Wrong raw array value at pos 5", *(arr[5]) == b);
+
+    deletePointerArray(&pa);
+    free(arr);
+
+    return 0;
+}

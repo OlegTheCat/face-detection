@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 PointerArray createPointerArray() {
     PointerArray pa;
@@ -27,6 +28,16 @@ void addToPointerArray(PointerArray *pa, void *p) {
 
 void *getFromPointerArray(const PointerArray *pa, int idx) {
     return pa->elements[idx];
+}
+
+
+void **rawArrayFromPointerArray(const PointerArray *pa) {
+    void **arr;
+
+    arr = malloc(sizeof(void *) * pa->size);
+    memcpy(arr, pa->elements, sizeof(void *) * pa->size);
+
+    return arr;
 }
 
 void deletePointerArray(PointerArray *pa) {

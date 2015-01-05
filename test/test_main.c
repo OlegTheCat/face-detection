@@ -22,6 +22,7 @@ static char *all_tests() {
     mu_run_test(testSubImage);
     mu_run_test(testCreatePointerArray);
     mu_run_test(testAddToPointerArray);
+    mu_run_test(testRawArray);
     mu_run_test(testReadImageList);
     mu_run_test(testSubSampleImage);
     mu_run_test(testCreateFloatMatrix);

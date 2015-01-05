@@ -46,6 +46,7 @@ float mean(FloatMatrix *fm) {
     return matSum(fm) / (fm->cols * fm->rows);
 }
 
+// This also can be done using II
 void convertToNormalized(FloatMatrix *fm) {
     float std_dev;
     int i, j;

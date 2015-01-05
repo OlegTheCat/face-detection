@@ -5,7 +5,9 @@
 *** TODO Investigate additional algorithms
 ** Parallelization tequniques
 *** OpenCL
-**** TODO Find OpenCL Book
+**** DONE Find OpenCL Book
+     CLOSED: [2015-01-05 Mon 22:47]
+**** Find some available openCL solutions, code snippets, etc
 *** MPI
 *** Pthreads
 **** TODO Think about usage of thread pool
@@ -26,10 +28,21 @@
 *** TODO Images preprocessing
 **** TODO Single threaded
 **** TODO Parallel
+*** TODO Data Set
+**** TODO Feature Storage
+Requirements for Feature Storage:
+***** Remove row
+***** Get collumn
+
+***** TODO SqLite based
+***** TODO Investigate other possibilities for feature storage implementation
 *** TODO Weak Classifier
 **** TODO Decision Stump
 **** TODO Investigate other weak classifiers
 *** TODO AdaBoost
 **** Single Threaded AdaBoost
 *** TODO Cascade Classifier
-
+** Benchmarking
+*** TODO Find benchmarking solutions for C
+** Misc
+*** [[https://code.google.com/p/openclcc/][openclcc]]

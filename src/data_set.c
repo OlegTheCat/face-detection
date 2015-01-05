@@ -73,5 +73,6 @@ void subSampleImage(const PgmImage *image, PgmImage ***samples,
     }
 
     *samples_count = samples_array.size;
-    *samples = (PgmImage **)samples_array.elements;
+    *samples = (PgmImage **)rawArrayFromPointerArray(&samples_array);
+    deletePointerArray(&samples_array);
 }
