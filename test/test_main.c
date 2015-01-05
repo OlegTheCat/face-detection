@@ -2,7 +2,7 @@
 #include "minunit.h"
 
 #include "pgm_test.h"
-#include "pointer_array_test.h"
+#include "array_list_test.h"
 #include "data_set_test.h"
 #include "float_matrix_test.h"
 #include "img_proc_test.h"
@@ -20,8 +20,9 @@ static char *all_tests() {
     mu_run_test(testCreateImage);
     mu_run_test(testSaveImage);
     mu_run_test(testSubImage);
-    mu_run_test(testCreatePointerArray);
-    mu_run_test(testAddToPointerArray);
+    mu_run_test(testCreateArrayList);
+    mu_run_test(testAddToArrayList);
+    mu_run_test(testAddToArrayList2);
     mu_run_test(testRawArray);
     mu_run_test(testReadImageList);
     mu_run_test(testSubSampleImage);

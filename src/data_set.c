@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "rect.h"
-#include "pointer_array.h"
+#include "array_list.h"
 
 void readImageList(const char *filename,
 		   PgmImage ***images,
@@ -49,7 +49,7 @@ void subSampleImage(const PgmImage *image, PgmImage ***samples,
 		    int sample_step_x, int sample_step_y,
 		    int *samples_count) {
 
-    PointerArray samples_array;
+    ArrayList samples_array;
     PgmImage *sample;
     int x, y;
 
@@ -58,7 +58,7 @@ void subSampleImage(const PgmImage *image, PgmImage ***samples,
 	return;
     }
 
-    samples_array = createPointerArray();
+    samples_array = createArrayList(sizeof(PgmImage *));
 
     for (y = 0; y + sample_height < image->height; y += sample_step_y) {
 	for (x = 0; x + sample_width < image->width; x += sample_step_x) {
@@ -68,11 +68,11 @@ void subSampleImage(const PgmImage *image, PgmImage ***samples,
 			      sample_width,
 			      sample_height);
 
-	    addToPointerArray(&samples_array, sample);
+	    addToArrayList(&samples_array, &sample);
 	}
     }
 
     *samples_count = samples_array.size;
-    *samples = (PgmImage **)rawArrayFromPointerArray(&samples_array);
-    deletePointerArray(&samples_array);
+    *samples = (PgmImage **)rawArrayFromArrayList(&samples_array);
+    deleteArrayList(&samples_array);
 }
