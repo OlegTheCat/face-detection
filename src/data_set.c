@@ -4,8 +4,103 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "rect.h"
-#include "array_list.h"
+#include "img_proc.h"
+#include "haar_feature.h"
+#include "persistent_float_matrix.h"
+
+DataSet *createDataSet(const char *pos_list,
+		       const char *neg_list,
+		       int img_width,
+		       int img_height) {
+    DataSet *ds;
+    Label *labels;
+    PgmImage **pos_images, **neg_images;
+    FloatMatrix *mat, **iis;
+    float *feature_vals;
+    PersistentFloatMatrix *pfm;
+    HaarFeature *features;
+    int i, j, num_pos_images, num_neg_images,
+	num_total_images, num_features;
+
+    readImageList(pos_list, &pos_images, &num_pos_images);
+    readImageList(neg_list, &neg_images, &num_neg_images);
+    num_total_images = num_pos_images + num_neg_images;
+    labels = malloc(sizeof(Label) * num_total_images);
+    iis = malloc(sizeof(FloatMatrix *) * num_total_images);
+
+    for (i = 0; i < num_pos_images; i++) {
+	mat = floatMatrixFromImage(pos_images[i]);
+	convertToNormalized(mat);
+	iis[i] = computeII(mat, 0);
+	labels[i] = positive_label;
+	deleteFloatMatrix(mat);
+    }
+
+    for (i = 0; i < num_neg_images; i++) {
+	mat = floatMatrixFromImage(neg_images[i]);
+	convertToNormalized(mat);
+	iis[i + num_pos_images] = computeII(mat, 0);
+	labels[i + num_pos_images] = negative_label;
+	deleteFloatMatrix(mat);
+    }
+
+    generateHaarFeatures(img_width + 1, img_height + 1,
+		     &features, &num_features);
+
+    pfm = createPfm("data_set.storage",
+		    num_total_images,
+		    num_features);
+
+    feature_vals = malloc(sizeof(float) * num_total_images);
+    for (i = 0; i < num_features; i++) {
+	for (j = 0; j < num_total_images; j++) {
+	    feature_vals[j] = evaluateFeature(&features[i],
+					      iis[j]);
+	}
+	storePfmCol(pfm, feature_vals, i);
+    }
+
+    ds = malloc(sizeof(DataSet));
+
+    ds->labels = labels;
+    ds->data = pfm;
+    ds->disqualified_rows = createArrayList(sizeof(int));
+
+    for (i = 0; i < num_pos_images; i++) {
+	deletePgmImage(pos_images[i]);
+    }
+    free(pos_images);
+    for (i = 0; i < num_neg_images; i++) {
+	deletePgmImage(neg_images[i]);
+    }
+    free(neg_images);
+    for (i = 0; i < num_total_images; i++) {
+	deleteFloatMatrix(iis[i]);
+    }
+    free(iis);
+    free(features);
+    free(feature_vals);
+
+    return ds;
+}
+
+inline int getExamplesNum(DataSet *ds) {
+    return ds->data->rows;
+}
+
+inline int getFeaturesNum(DataSet *ds) {
+    return ds->data->cols;
+}
+
+void deleteDataSet(DataSet *ds) {
+    if (ds != NULL) {
+	if (ds->labels != NULL) free(ds->labels);
+	if (ds->data != NULL) deletePfm(ds->data);
+	deleteArrayList(&ds->disqualified_rows);
+	free(ds);
+    }
+}
+
 
 void readImageList(const char *filename,
 		   PgmImage ***images,

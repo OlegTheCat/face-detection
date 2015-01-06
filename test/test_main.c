@@ -29,6 +29,7 @@ static char *all_tests() {
     mu_run_test(testRawArray);
     mu_run_test(testReadImageList);
     mu_run_test(testSubSampleImage);
+    mu_run_test(testCreateDataSet);
     mu_run_test(testCreateFloatMatrix);
     mu_run_test(testSetGetValues);
     mu_run_test(testMatSum);

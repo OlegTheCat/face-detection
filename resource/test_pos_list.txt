@@ -1,11 +1,4 @@
-17
-face-detection-data/pos/15829.pgm
-face-detection-data/pos/0.pgm
-face-detection-data/pos/1.pgm
-face-detection-data/pos/10.pgm
-face-detection-data/pos/100.pgm
-face-detection-data/pos/1000.pgm
-face-detection-data/pos/10000.pgm
+10
 face-detection-data/pos/10001.pgm
 face-detection-data/pos/10002.pgm
 face-detection-data/pos/10003.pgm

@@ -1,11 +1,4 @@
-13
-face-detection-data/neg/neg-0002.pgm
-face-detection-data/neg/neg-0003.pgm
-face-detection-data/neg/neg-0004.pgm
-face-detection-data/neg/neg-0005.pgm
-face-detection-data/neg/neg-0006.pgm
-face-detection-data/neg/neg-0007.pgm
-face-detection-data/neg/neg-0009.pgm
+6
 face-detection-data/neg/neg-0010.pgm
 face-detection-data/neg/neg-0011.pgm
 face-detection-data/neg/neg-0012.pgm

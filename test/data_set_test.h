@@ -2,3 +2,4 @@
 
 char *testReadImageList();
 char *testSubSampleImage();
+char *testCreateDataSet();
