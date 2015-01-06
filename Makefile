@@ -11,7 +11,7 @@ SRC_DIR := src/
 HEADERS := $(wildcard $(SRC_DIR)*.h)
 SOURCES := $(wildcard $(SRC_DIR)*.c)
 OBJS := $(patsubst $(SRC_DIR)%.c, $(BIN_DIR)%.o, $(SOURCES))
-TARGET := libod.a
+TARGET := libfd.a
 BIN_TARGET := $(BIN_DIR)$(TARGET)
 
 

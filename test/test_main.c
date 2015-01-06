@@ -6,6 +6,7 @@
 #include "data_set_test.h"
 #include "float_matrix_test.h"
 #include "img_proc_test.h"
+#include "haar_feature_test.h"
 
 int tests_run = 0;
 
@@ -33,6 +34,9 @@ static char *all_tests() {
     mu_run_test(testStdDev);
     mu_run_test(testMean);
     mu_run_test(testConvertToNormalized);
+    mu_run_test(testCreateFeature);
+    mu_run_test(testEvaluateFeature);
+    mu_run_test(testGenerateHaarFeatures);
 
     return 0;
 }
