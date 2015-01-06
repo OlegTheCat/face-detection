@@ -40,7 +40,7 @@ static char *all_tests() {
     mu_run_test(testEvaluateFeature);
     mu_run_test(testGenerateHaarFeatures);
     mu_run_test(testCreatePfm);
-    mu_run_test(testGetPfmCol);
+    mu_run_test(testGetStorePfmCol);
 
     return 0;
 }

@@ -32,9 +32,16 @@
 **** TODO Feature Storage
 Requirements for Feature Storage:
 ***** Remove row
+      Actually this is not strictly necessary. 
+      Client can simply invalidate some rows on its side.
 ***** Get collumn
 
-***** TODO SqLite based
+***** DONE Sqlite based
+      Sqlite based solution is not acceptable due to performance
+      reasons. It takes ~0.5 min (precise output by 
+      time utility 0m31.215s) to create 10x10 storage.
+      CLOSED: [2015-01-06 Tue 22:51]
+***** TODO Selfwritten file based storage 
 ***** TODO Investigate other possibilities for feature storage implementation
 *** TODO Weak Classifier
 **** TODO Decision Stump

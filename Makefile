@@ -1,8 +1,13 @@
 CC := gcc
 VALGRIND := valgrind
 VALGRIND_OPTS += --tool=memcheck --leak-check=full
-C_OPTS += -Wall -Wextra -Werror -g3 -O0
-LD_OPTS += -lm -lsqlite3
+C_OPTS += -Wall -Wextra -Werror
+ifdef RELEASE
+C_OPTS += -O3
+else
+C_OPTS += -g3 -O0
+endif
+LD_OPTS += -lm
 
 
 BIN_DIR := target/

@@ -1,5 +1,5 @@
 #pragma once
 
 char *testCreatePfm();
-char *testGetPfmCol();
+char *testGetStorePfmCol();
 

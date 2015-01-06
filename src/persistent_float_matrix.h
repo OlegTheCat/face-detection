@@ -13,5 +13,6 @@ typedef struct PersistentFloatMatrix PersistentFloatMatrix;
 PersistentFloatMatrix *createPfm(const char *storage_path,
 				 int rows,
 				 int cols);
-float *getPfmCol(int idx);
+int getPfmCol(PersistentFloatMatrix *pfm, float *buf, int col_idx);
+int storePfmCol(PersistentFloatMatrix *pfm, const float *col, int col_idx);
 void deletePfm(PersistentFloatMatrix *pfm);
