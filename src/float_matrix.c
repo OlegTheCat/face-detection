@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-FloatMatrix *createFloatMatrix(int cols, int rows) {
+FloatMatrix *createFloatMatrix(int rows, int cols) {
     FloatMatrix *fm;
 
     fm = malloc(sizeof(FloatMatrix));

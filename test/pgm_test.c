@@ -88,3 +88,24 @@ char *testSubImage() {
     deletePgmImage(sub_image);
     return 0;
 }
+
+char *testToFloatMatrix() {
+    PgmImage *image;
+    FloatMatrix *fm;
+
+    image = readPgmImage(TEST_IMG);
+    fm = floatMatrixFromImage(image);
+
+    mu_assert("Wrong mat rows", fm->rows == image->height);
+    mu_assert("Wrong mat cols", fm->cols == image->width);
+    mu_assert("Wrong mat data[3, 5]",
+	      floatEqual(imgVal(image, 3, 5), matVal(fm, 3, 5)));
+    mu_assert("Wrong mat cols[10, 20]",
+	      floatEqual(imgVal(image, 10, 20), matVal(fm, 10, 20)));
+
+    deletePgmImage(image);
+    deleteFloatMatrix(fm);
+
+    return 0;
+}
+

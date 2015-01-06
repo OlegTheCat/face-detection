@@ -7,6 +7,7 @@
 #include "float_matrix_test.h"
 #include "img_proc_test.h"
 #include "haar_feature_test.h"
+#include "persistent_float_matrix_test.h"
 
 int tests_run = 0;
 
@@ -21,6 +22,7 @@ static char *all_tests() {
     mu_run_test(testCreateImage);
     mu_run_test(testSaveImage);
     mu_run_test(testSubImage);
+    mu_run_test(testToFloatMatrix);
     mu_run_test(testCreateArrayList);
     mu_run_test(testAddToArrayList);
     mu_run_test(testAddToArrayList2);
@@ -37,6 +39,8 @@ static char *all_tests() {
     mu_run_test(testCreateFeature);
     mu_run_test(testEvaluateFeature);
     mu_run_test(testGenerateHaarFeatures);
+    mu_run_test(testCreatePfm);
+    mu_run_test(testGetPfmCol);
 
     return 0;
 }

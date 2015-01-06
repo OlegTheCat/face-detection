@@ -134,6 +134,19 @@ PgmImage *subImage(const PgmImage *source, int x, int y, int w, int h) {
     return image;
 }
 
+FloatMatrix *floatMatrixFromImage(PgmImage *img) {
+    FloatMatrix *fm;
+    int i;
+
+    fm = createFloatMatrix(img->height, img->width);
+    for (i = 0; i < img->height * img->width; i++) {
+	fm->data[i] = (float)img->data[i];
+    }
+
+    return fm;
+}
+
+
 int imgVal(const PgmImage *image, int row, int col) {
     return image->data[row * image->width + col];
 }
