@@ -6,7 +6,7 @@
 #include "persistent_float_matrix.h"
 #include "utils.h"
 
-char *testCreatePfm() {
+const char *testCreatePfm() {
     PersistentFloatMatrix *pfm;
     int rows, cols;
 
@@ -25,7 +25,7 @@ char *testCreatePfm() {
     return 0;
 }
 
-char *testGetStorePfmCol() {
+const char *testGetStorePfmCol() {
     PersistentFloatMatrix *pfm;
     float col[10];
     int i;
@@ -61,7 +61,7 @@ char *testGetStorePfmCol() {
     return 0;
 }
 
-char *testRemovePfmRow() {
+const char *testRemovePfmRow() {
     PersistentFloatMatrix *pfm;
     float col[10];
     int i;

@@ -1,5 +1,5 @@
 #pragma once
 
-char *testCreatePfm();
-char *testGetStorePfmCol();
-char *testRemovePfmRow();
+const char *testCreatePfm();
+const char *testGetStorePfmCol();
+const char *testRemovePfmRow();

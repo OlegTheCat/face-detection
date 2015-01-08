@@ -29,7 +29,7 @@ static FloatMatrix *getFloatMatrix() {
     return fm;
 }
 
-char *testComputeII() {
+const char *testComputeII() {
     FloatMatrix *fm, *ii, *ii2;
 
     fm = getFloatMatrix();
@@ -58,7 +58,7 @@ char *testComputeII() {
     return 0;
 }
 
-char *testStdDev() {
+const char *testStdDev() {
     FloatMatrix *fm;
 
     fm = getFloatMatrix();
@@ -70,7 +70,7 @@ char *testStdDev() {
     return 0;
 }
 
-char *testMean() {
+const char *testMean() {
     FloatMatrix *fm;
 
     fm = getFloatMatrix();
@@ -81,7 +81,7 @@ char *testMean() {
     return 0;
 }
 
-char *testConvertToNormalized() {
+const char *testConvertToNormalized() {
     FloatMatrix *fm;
 
     fm = getFloatMatrix();

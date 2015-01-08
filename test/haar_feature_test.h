@@ -1,5 +1,5 @@
 #pragma once
 
-char *testCreateFeature();
-char *testEvaluateFeature();
-char *testGenerateHaarFeatures();
+const char *testCreateFeature();
+const char *testEvaluateFeature();
+const char *testGenerateHaarFeatures();

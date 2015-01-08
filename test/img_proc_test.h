@@ -1,6 +1,6 @@
 #pragma once
 
-char *testComputeII();
-char *testStdDev();
-char *testMean();
-char *testConvertToNormalized();
+const char *testComputeII();
+const char *testStdDev();
+const char *testMean();
+const char *testConvertToNormalized();

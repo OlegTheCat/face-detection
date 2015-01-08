@@ -1,5 +1,5 @@
 #pragma once
 
-char *testReadImageList();
-char *testSubSampleImage();
-char *testCreateDataSet();
+const char *testReadImageList();
+const char *testSubSampleImage();
+const char *testCreateDataSet();

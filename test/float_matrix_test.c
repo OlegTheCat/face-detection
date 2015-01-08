@@ -3,7 +3,7 @@
 #include "minunit.h"
 #include "float_matrix.h"
 
-char *testCreateFloatMatrix() {
+const char *testCreateFloatMatrix() {
     FloatMatrix *fm;
 
     fm = createFloatMatrix(10, 20);
@@ -15,7 +15,7 @@ char *testCreateFloatMatrix() {
     return 0;
 }
 
-char *testSetGetValues() {
+const char *testSetGetValues() {
     FloatMatrix *fm;
 
     fm = createFloatMatrix(10, 20);
@@ -37,7 +37,7 @@ char *testSetGetValues() {
     return 0;
 }
 
-char *testMatSum() {
+const char *testMatSum() {
     FloatMatrix *fm;
 
     fm = createFloatMatrix(3, 3);

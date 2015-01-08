@@ -11,12 +11,12 @@
 
 int tests_run = 0;
 
-static char *dummy() {
+static const char *dummy() {
     mu_assert("This should never come up", 1 == 1);
     return 0;
 }
 
-static char *all_tests() {
+static const char *all_tests() {
     mu_run_test(dummy);
     mu_run_test(testReadImage);
     mu_run_test(testCreateImage);
@@ -48,7 +48,7 @@ static char *all_tests() {
 }
 
 int main() {
-    char *result = all_tests();
+    const char *result = all_tests();
     if (result != 0) {
 	fprintf(stderr, "%s\n", result);
     } else {

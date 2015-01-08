@@ -8,7 +8,7 @@
 #include "minunit.h"
 #include "utils.h"
 
-char *testReadImage() {
+const char *testReadImage() {
     PgmImage *image;
 
     image = readPgmImage(TEST_IMG);
@@ -21,7 +21,7 @@ char *testReadImage() {
     return 0;
 }
 
-char *testCreateImage() {
+const char *testCreateImage() {
     PgmImage *image;
 
     image = createPgmImage(10, 20, 30);
@@ -34,7 +34,7 @@ char *testCreateImage() {
     return 0;
 }
 
-char *testSaveImage() {
+const char *testSaveImage() {
     PgmImage *image, *restored;
     const char *save_path = "test_save.pgm";
     int i, j;
@@ -62,7 +62,7 @@ char *testSaveImage() {
     return 0;
 }
 
-char *testSubImage() {
+const char *testSubImage() {
     PgmImage *image, *sub_image;
     int x, y, w, h, i, i0, j, j0;
 
@@ -89,7 +89,7 @@ char *testSubImage() {
     return 0;
 }
 
-char *testToFloatMatrix() {
+const char *testToFloatMatrix() {
     PgmImage *image;
     FloatMatrix *fm;
 

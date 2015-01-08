@@ -33,7 +33,7 @@ static FloatMatrix *getFloatMatrix() {
     return fm;
 }
 
-char *testCreateFeature() {
+const char *testCreateFeature() {
     HaarRect hr;
 
     hr = createHaarRect(5, 1, 1, 2, 2, 1);
@@ -59,7 +59,7 @@ void printFloatMatrix(FloatMatrix *fm) {
     }
 }
 
-char *testEvaluateFeature() {
+const char *testEvaluateFeature() {
     FloatMatrix *fm, *ii;
     HaarFeature hf1, hf2;
 
@@ -90,7 +90,7 @@ char *testEvaluateFeature() {
     return 0;
 }
 
-char *testGenerateHaarFeatures() {
+const char *testGenerateHaarFeatures() {
     HaarFeature *features;
     int num_features;
     int w, h;

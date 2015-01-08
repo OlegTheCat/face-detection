@@ -1,6 +1,6 @@
 #pragma once
 
-char *testCreateArrayList();
-char *testAddToArrayList();
-char *testAddToArrayList2();
-char *testRawArray();
+const char *testCreateArrayList();
+const char *testAddToArrayList();
+const char *testAddToArrayList2();
+const char *testRawArray();

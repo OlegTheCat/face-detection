@@ -1,5 +1,5 @@
 #pragma once
 
-char *testCreateFloatMatrix();
-char *testSetGetValues();
-char *testMatSum();
+const char *testCreateFloatMatrix();
+const char *testSetGetValues();
+const char *testMatSum();

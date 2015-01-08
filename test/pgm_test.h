@@ -1,7 +1,7 @@
 #pragma once
 
-char *testReadImage();
-char *testCreateImage();
-char *testSaveImage();
-char *testSubImage();
-char *testToFloatMatrix();
+const char *testReadImage();
+const char *testCreateImage();
+const char *testSaveImage();
+const char *testSubImage();
+const char *testToFloatMatrix();

@@ -5,7 +5,7 @@
 #include "minunit.h"
 #include "array_list.h"
 
-char *testCreateArrayList() {
+const char *testCreateArrayList() {
     ArrayList al;
 
     al = createArrayList(sizeof(int));
@@ -15,7 +15,7 @@ char *testCreateArrayList() {
     return 0;
 }
 
-char *testAddToArrayList() {
+const char *testAddToArrayList() {
     int *a, *b, *c;
     ArrayList al;
 
@@ -58,7 +58,7 @@ char *testAddToArrayList() {
     return 0;
 }
 
-char *testAddToArrayList2() {
+const char *testAddToArrayList2() {
     struct TestStruct {
 	int a;
 	float b;
@@ -86,7 +86,7 @@ char *testAddToArrayList2() {
     return 0;
 }
 
-char *testRawArray() {
+const char *testRawArray() {
     ArrayList al;
     int a, b;
     int *arr;

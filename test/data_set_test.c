@@ -6,7 +6,7 @@
 #include "data_set.h"
 #include "constants.h"
 
-char *testReadImageList() {
+const char *testReadImageList() {
     PgmImage **images, *image1, *image2;
     int i, images_count;
 
@@ -28,7 +28,7 @@ char *testReadImageList() {
     return 0;
 }
 
-char *testSubSampleImage() {
+const char *testSubSampleImage() {
     PgmImage *image, **samples;
     int i, samples_count;
 
@@ -45,7 +45,7 @@ char *testSubSampleImage() {
     return 0;
 }
 
-char *testCreateDataSet() {
+const char *testCreateDataSet() {
     DataSet *ds;
 
     ds = createDataSet(TEST_POS_LIST, TEST_NEG_LIST, 5, 5);
