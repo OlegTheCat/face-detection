@@ -2,4 +2,4 @@
 
 char *testCreatePfm();
 char *testGetStorePfmCol();
-
+char *testRemovePfmRow();

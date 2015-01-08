@@ -42,6 +42,7 @@ static char *all_tests() {
     mu_run_test(testGenerateHaarFeatures);
     mu_run_test(testCreatePfm);
     mu_run_test(testGetStorePfmCol);
+    mu_run_test(testRemovePfmRow);
 
     return 0;
 }

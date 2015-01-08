@@ -60,3 +60,51 @@ char *testGetStorePfmCol() {
     deletePfm(pfm);
     return 0;
 }
+
+char *testRemovePfmRow() {
+    PersistentFloatMatrix *pfm;
+    float col[10];
+    int i;
+
+    system("rm -f test_storage3.storage*");
+
+    pfm = createPfm("test_storage3.storage", 10, 20);
+
+    for (i = 0; i < 10; i++) {
+	col[i] = (float)(i + 1);
+    }
+
+    storePfmCol(pfm, col, 5);
+    storePfmCol(pfm, col, 10);
+
+    removePfmRow(pfm, 0);
+    removePfmRow(pfm, 0);
+    removePfmRow(pfm, 5);
+    /* 5, 10 cols after row removal:
+       [1], [2], 3, 4, 5, 6, 7, [8], 9, 10
+     */
+
+    mu_assert("Wrong rows number after removal", pfm->rows == 7);
+
+    getPfmCol(pfm, col, 5);
+    mu_assert("Wrong col1 value at pos #1", floatEqual(col[0], 3));
+    mu_assert("Wrong col1 value at pos #6", floatEqual(col[6], 10));
+
+    getPfmCol(pfm, col, 10);
+    mu_assert("Wrong col2 value at pos #1", floatEqual(col[0], 3));
+    mu_assert("Wrong col2 value at pos #6", floatEqual(col[6], 10));
+
+    for (i = 0; i < 10; i++) {
+	col[i] = (float)(i + 10);
+    }
+
+    storePfmCol(pfm, col, 1);
+    getPfmCol(pfm, col, 1);
+
+    mu_assert("Wrong retrieved col value at pos #1", floatEqual(col[0], 10));
+    mu_assert("Wrong retrieved col value at pos #6", floatEqual(col[6], 16));
+
+    system("rm -f test_storage3.storage*");
+    deletePfm(pfm);
+    return 0;
+}
