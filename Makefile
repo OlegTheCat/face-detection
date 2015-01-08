@@ -19,14 +19,18 @@ OBJS := $(patsubst $(SRC_DIR)%.c, $(BIN_DIR)%.o, $(SOURCES))
 TARGET := libfd.a
 BIN_TARGET := $(BIN_DIR)$(TARGET)
 
+$(BIN_DIR) :
+	mkdir -p $@
 
 $(BIN_TARGET) : $(OBJS)
 	ar rcs $@ $^
 
+$(OBJS) : | $(BIN_DIR)
+
 $(BIN_DIR)%.o : $(SRC_DIR)%.c
 	$(CC) -c $< $(C_OPTS) -o $@
 
-target : $(BIN_TARGET)
+lib-target : $(BIN_TARGET)
 
 
 
@@ -40,8 +44,8 @@ BIN_TEST_TARGET := $(BIN_DIR)$(TEST_TARGET)
 $(BIN_DIR)%.o : $(TEST_DIR)%.c
 	$(CC) -c $< $(C_OPTS) -I$(SRC_DIR) -o $@
 
-$(BIN_TEST_TARGET) : $(TEST_OBJS) $(BIN_TARGET)
-	$(CC) $^ $(LD_OPTS) -o $@
+$(BIN_TEST_TARGET) : $(BIN_TARGET) $(TEST_OBJS)
+	$(CC) $(TEST_OBJS) $(BIN_TARGET) $(LD_OPTS) -o $@
 
 test-target : $(BIN_TEST_TARGET)
 
