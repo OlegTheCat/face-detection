@@ -11,7 +11,8 @@
 DataSet *createDataSet(const char *pos_list,
 		       const char *neg_list,
 		       int img_width,
-		       int img_height) {
+		       int img_height,
+		       const char *storage_file) {
     DataSet *ds;
     Label *labels;
     PgmImage **pos_images, **neg_images;
@@ -44,10 +45,12 @@ DataSet *createDataSet(const char *pos_list,
 	deleteFloatMatrix(mat);
     }
 
+    // Increasing width and height by 1 due to dealing
+    // with IIs, not input images
     generateHaarFeatures(img_width + 1, img_height + 1,
-		     &features, &num_features);
+			 &features, &num_features);
 
-    pfm = createPfm("data_set.storage",
+    pfm = createPfm(storage_file,
 		    num_total_images,
 		    num_features);
 
@@ -64,8 +67,9 @@ DataSet *createDataSet(const char *pos_list,
 
     ds->labels = labels;
     ds->data = pfm;
-    ds->disqualified_rows = createArrayList(sizeof(int));
-
+    ds->pos_examples_num = num_pos_images;
+    ds->neg_examples_num = num_neg_images;
+    
     for (i = 0; i < num_pos_images; i++) {
 	deletePgmImage(pos_images[i]);
     }
@@ -84,8 +88,20 @@ DataSet *createDataSet(const char *pos_list,
     return ds;
 }
 
+void getFeatureVals(DataSet *ds, float *vals, int feature_idx) {
+    getPfmCol(ds->data, vals, feature_idx);
+}
+
 inline int getExamplesNum(DataSet *ds) {
     return ds->data->rows;
+}
+
+inline int getPosExamplesNum(DataSet *ds) {
+    return ds->pos_examples_num;
+}
+
+inline int getNegExamplesNum(DataSet *ds) {
+    return ds->neg_examples_num;
 }
 
 inline int getFeaturesNum(DataSet *ds) {
@@ -96,7 +112,6 @@ void deleteDataSet(DataSet *ds) {
     if (ds != NULL) {
 	if (ds->labels != NULL) free(ds->labels);
 	if (ds->data != NULL) deletePfm(ds->data);
-	deleteArrayList(&ds->disqualified_rows);
 	free(ds);
     }
 }
@@ -115,25 +130,26 @@ void readImageList(const char *filename,
     file = fopen(filename, "rt");
     if (file == NULL) {
 	printf("Cannot find file list %s\n", filename);
-	*images = NULL;
-	*images_count = -1;
+	if (images != NULL) *images = NULL;
+	if (images != NULL) *images_count = -1;
 	return;
     }
 
     fscanf(file, "%d", &images_num);
     /* printf("Number of images = %d\n", images_num); */
 
-    *images_count = images_num;
+    if (images_count != NULL) *images_count = images_num;
+    if (images != NULL) {
+	*images = malloc(sizeof(PgmImage *) * images_num);
 
-    *images = malloc(sizeof(PgmImage *) * images_num);
+	while(getc(file) != '\n');
 
-    while(getc(file) != '\n');
+	counter = 0;
 
-    counter = 0;
-
-    while (fgets(line, sizeof(line), file)) {
-	line[strlen(line) - 1] = '\0';
-	(*images)[counter++] = readPgmImage(line);
+	while (fgets(line, sizeof(line), file)) {
+	    line[strlen(line) - 1] = '\0';
+	    (*images)[counter++] = readPgmImage(line);
+	}
     }
 
     fclose(file);
@@ -149,7 +165,8 @@ void subSampleImage(const PgmImage *image, PgmImage ***samples,
     int x, y;
 
     if (image->width <= sample_width || image->height <= sample_height) {
-	*samples = NULL;
+	if (samples != NULL) *samples = NULL;
+	if (samples_count != NULL) *samples_count = 0;
 	return;
     }
 
@@ -167,7 +184,7 @@ void subSampleImage(const PgmImage *image, PgmImage ***samples,
 	}
     }
 
-    *samples_count = samples_array.size;
-    *samples = (PgmImage **)rawArrayFromArrayList(&samples_array);
+    if (samples != NULL) *samples = (PgmImage **)rawArrayFromArrayList(&samples_array);
+    if (samples_count != NULL) *samples_count = samples_array.size;
     deleteArrayList(&samples_array);
 }

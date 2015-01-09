@@ -48,12 +48,14 @@ const char *testSubSampleImage() {
 const char *testCreateDataSet() {
     DataSet *ds;
 
-    ds = createDataSet(TEST_POS_LIST, TEST_NEG_LIST, 5, 5);
+    system("rm -f test_data_set*");
+    ds = createDataSet(TEST_POS_LIST, TEST_NEG_LIST, 5, 5, "test_data_set.storage");
 
     mu_assert("Error during creation of dataset", ds != NULL);
     mu_assert("Num features == 0 ", getFeaturesNum(ds) != 0);
     mu_assert("Wrong images num", getExamplesNum(ds) == 16);
 
+    system("rm -f test_data_set*");
     deleteDataSet(ds);
     return 0;
 }

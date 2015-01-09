@@ -50,7 +50,6 @@ Pfmi *createImpl(const char *storage_path, int rows, int cols) {
 	}
 
 	free(zero_col);
-
 	rewind(f);
     }
 

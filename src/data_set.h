@@ -12,8 +12,9 @@ typedef enum {
 
 struct DataSet {
     struct PersistentFloatMatrix *data;
+    int pos_examples_num;
+    int neg_examples_num;
     Label *labels;
-    ArrayList disqualified_rows;
 };
 
 typedef struct DataSet DataSet;
@@ -21,9 +22,15 @@ typedef struct DataSet DataSet;
 DataSet *createDataSet(const char *pos_list,
 		       const char *neg_list,
 		       int img_width,
-		       int img_height);
+		       int img_height,
+		       const char *storage_file);
+
 inline int getExamplesNum(DataSet *ds);
+inline int getPosExamplesNum(DataSet *ds);
+inline int getNegExamplesNum(DataSet *ds);
 inline int getFeaturesNum(DataSet *ds);
+void getFeatureVals(DataSet *ds, float *vals, int feature_idx);
+
 void deleteDataSet(DataSet *ds);
 
 void readImageList(const char *filename,

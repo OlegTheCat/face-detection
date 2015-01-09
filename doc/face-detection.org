@@ -7,7 +7,7 @@
 *** OpenCL
 **** DONE Find OpenCL Book
      CLOSED: [2015-01-05 Mon 22:47]
-**** Find some available openCL solutions, code snippets, etc
+**** TODO Find some available openCL solutions, code snippets, etc
 *** MPI
 *** Pthreads
 **** TODO Think about usage of thread pool
@@ -16,39 +16,61 @@
 *** Hybrid feature set
 *** Integer-values Haar Cascade
 ** Implementation
-*** TODO Images loading
+*** DONE Images loading
+    CLOSED: [2015-01-07 Wed 02:35]
 *** TODO Features
-**** TODO Haar features
+**** DONE Haar features
+     CLOSED: [2015-01-07 Wed 02:35]
 **** TODO LBP fearues
-*** TODO Integral Image
+*** DONE Integral Image
+    CLOSED: [2015-01-07 Wed 20:15]
 **** DONE Single threaded II computation
      CLOSED: [2015-01-05 Mon 19:13]
-**** TODO pthread II computation
-**** TODO OpenCL II computation
 *** TODO Images preprocessing
 **** TODO Single threaded
 **** TODO Parallel
-*** TODO Data Set
-**** TODO Feature Storage
+*** DONE Data Set
+    CLOSED: [2015-01-07 Wed 02:36]
+**** DONE Feature Storage
+     CLOSED: [2015-01-07 Wed 02:36]
 Requirements for Feature Storage:
 ***** Remove row
       Actually this is not strictly necessary. 
       Client can simply invalidate some rows on its side.
+      UPD: Storing invalidated rows on the client size
+      causes a lot of mess during classifier training.
+      Possible solution:
+      storing invalidated rows should be encapsulated
+      inside storage data type. Also filtering of
+      collumn should be implemented and be applied right
+      after retieving from storage.
 ***** Get collumn
-
 ***** DONE Sqlite based
       Sqlite based solution is not acceptable due to performance
       reasons. It takes ~0.5 min (precise output by 
       time utility 0m31.215s) to create 10x10 storage.
       CLOSED: [2015-01-06 Tue 22:51]
-***** TODO Selfwritten file based storage 
-***** TODO Investigate other possibilities for feature storage implementation
+***** DONE Selfwritten file based storage
+      CLOSED: [2015-01-09 Fri 02:15]
+      File based storage shows much better performance in comparison with sqlite.
+      It takes several minutes to create 150k x 20k storage.
+      
+***** DONE Investigate other possibilities for feature storage implementation
+      CLOSED: [2015-01-07 Wed 02:36]
 *** TODO Weak Classifier
 **** TODO Decision Stump
+     As soon as decision stump is restricted to learn only using one feature
+     the only thing is needed is to find threshold values.
 **** TODO Investigate other weak classifiers
 *** TODO AdaBoost
 **** Single Threaded AdaBoost
 *** TODO Cascade Classifier
+*** TODO Parallelization
+**** TODO pthread II computation
+**** TODO OpenCL II computation
+*** Other
+**** TODO Use stdbool.h
+**** TODO Use safe malloc that runs exit when there is no availabe memory
 ** Benchmarking
 *** TODO Find benchmarking solutions for C
 ** Misc

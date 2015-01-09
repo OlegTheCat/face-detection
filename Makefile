@@ -56,7 +56,7 @@ valgrind-test-run : test-target
 	$(VALGRIND) $(VALGRIND_OPTS) ./$(BIN_TEST_TARGET)
 
 clean:
-	rm -rvf $(BIN_DIR)*
+	rm -rvf $(BIN_DIR)
 
 check-syntax:
 	$(CC) $(C_OPTS) -o /dev/null -S ${CHK_SOURCES}
