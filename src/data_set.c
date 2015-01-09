@@ -69,7 +69,7 @@ DataSet *createDataSet(const char *pos_list,
     ds->data = pfm;
     ds->pos_examples_num = num_pos_images;
     ds->neg_examples_num = num_neg_images;
-    
+
     for (i = 0; i < num_pos_images; i++) {
 	deletePgmImage(pos_images[i]);
     }
@@ -92,19 +92,19 @@ void getFeatureVals(DataSet *ds, float *vals, int feature_idx) {
     getPfmCol(ds->data, vals, feature_idx);
 }
 
-inline int getExamplesNum(DataSet *ds) {
+int getExamplesNum(DataSet *ds) {
     return ds->data->rows;
 }
 
-inline int getPosExamplesNum(DataSet *ds) {
+int getPosExamplesNum(DataSet *ds) {
     return ds->pos_examples_num;
 }
 
-inline int getNegExamplesNum(DataSet *ds) {
+int getNegExamplesNum(DataSet *ds) {
     return ds->neg_examples_num;
 }
 
-inline int getFeaturesNum(DataSet *ds) {
+int getFeaturesNum(DataSet *ds) {
     return ds->data->cols;
 }
 

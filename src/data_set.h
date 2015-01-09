@@ -25,10 +25,10 @@ DataSet *createDataSet(const char *pos_list,
 		       int img_height,
 		       const char *storage_file);
 
-inline int getExamplesNum(DataSet *ds);
-inline int getPosExamplesNum(DataSet *ds);
-inline int getNegExamplesNum(DataSet *ds);
-inline int getFeaturesNum(DataSet *ds);
+int getExamplesNum(DataSet *ds);
+int getPosExamplesNum(DataSet *ds);
+int getNegExamplesNum(DataSet *ds);
+int getFeaturesNum(DataSet *ds);
 void getFeatureVals(DataSet *ds, float *vals, int feature_idx);
 
 void deleteDataSet(DataSet *ds);

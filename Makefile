@@ -1,9 +1,9 @@
 CC := gcc
 VALGRIND := valgrind
 VALGRIND_OPTS += --tool=memcheck --leak-check=full
-C_OPTS += -Wall -Wextra -Werror
+C_OPTS += -Wall -Wextra -Werror -std=c99
 ifdef RELEASE
-C_OPTS += -O3
+C_OPTS += -O3 -DNDEBUG
 else
 C_OPTS += -g3 -O0
 endif

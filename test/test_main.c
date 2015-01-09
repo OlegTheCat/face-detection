@@ -8,6 +8,7 @@
 #include "img_proc_test.h"
 #include "haar_feature_test.h"
 #include "persistent_float_matrix_test.h"
+#include "restricted_decision_stump_test.h"
 
 int tests_run = 0;
 
@@ -43,6 +44,10 @@ static const char *all_tests() {
     mu_run_test(testCreatePfm);
     mu_run_test(testGetStorePfmCol);
     mu_run_test(testRemovePfmRow);
+    mu_run_test(testTrainRds1);
+    mu_run_test(testTrainRds2);
+    mu_run_test(testTrainRds3);
+    mu_run_test(testTrainRds4);
 
     return 0;
 }
