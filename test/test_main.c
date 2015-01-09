@@ -48,6 +48,7 @@ static const char *all_tests() {
     mu_run_test(testTrainRds2);
     mu_run_test(testTrainRds3);
     mu_run_test(testTrainRds4);
+    mu_run_test(testClassifyData);
 
     return 0;
 }

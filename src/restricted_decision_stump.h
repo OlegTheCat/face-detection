@@ -2,6 +2,8 @@
 
 #include "data_set.h"
 
+struct PersistentFloatMatrix;
+
 struct RestrictedDecisionStump {
     int feature_idx;
     Label left_val;
@@ -13,3 +15,6 @@ typedef struct RestrictedDecisionStump RestrictedDecisionStump;
 
 RestrictedDecisionStump createRds(int feature_idx);
 void trainRds(RestrictedDecisionStump *rds, struct DataSet *ds);
+void classifyData(const RestrictedDecisionStump *rds,
+		  struct PersistentFloatMatrix *pfm,
+		  Label *labels);

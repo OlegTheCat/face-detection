@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include "persistent_float_matrix.h"
+
 typedef RestrictedDecisionStump Rds;
 
 Rds createRds(int feature_idx) {
@@ -204,4 +206,24 @@ void trainRds(Rds *rds, DataSet *ds) {
     free(feature_vals);
     free(labels);
     free(val_labels);
+}
+
+void classifyData(const Rds *rds,
+		  PersistentFloatMatrix *pfm,
+		  Label *labels) {
+    int i;
+    float *feature_vals;
+
+    feature_vals = malloc(sizeof(float) * pfm->cols);
+    getPfmCol(pfm, feature_vals, rds->feature_idx);
+
+    for (i = 0; i < pfm->rows; i++) {
+	if (feature_vals[i] < rds->threshold) {
+	    labels[i] = rds->left_val;
+	} else {
+	    labels[i] = rds->right_val;
+	}
+    }
+
+    free(feature_vals);
 }
