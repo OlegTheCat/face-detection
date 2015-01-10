@@ -9,6 +9,7 @@
 #include "haar_feature_test.h"
 #include "persistent_float_matrix_test.h"
 #include "restricted_decision_stump_test.h"
+#include "ada_boost_test.h"
 
 int tests_run = 0;
 
@@ -48,7 +49,10 @@ static const char *all_tests() {
     mu_run_test(testTrainRds2);
     mu_run_test(testTrainRds3);
     mu_run_test(testTrainRds4);
-    mu_run_test(testClassifyData);
+    mu_run_test(testClassifyDataWithRds);
+    mu_run_test(testCreateAdaBoost);
+    mu_run_test(testTrainAdaBoost);
+    mu_run_test(testClassifyDataWithAdaBoost);
 
     return 0;
 }

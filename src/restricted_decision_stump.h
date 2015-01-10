@@ -15,6 +15,6 @@ typedef struct RestrictedDecisionStump RestrictedDecisionStump;
 
 RestrictedDecisionStump createRds(int feature_idx);
 void trainRds(RestrictedDecisionStump *rds, struct DataSet *ds);
-void classifyData(const RestrictedDecisionStump *rds,
-		  struct PersistentFloatMatrix *pfm,
-		  Label *labels);
+void classifyDataWithRds(const RestrictedDecisionStump *rds,
+			 struct PersistentFloatMatrix *pfm,
+			 Label *labels);

@@ -208,9 +208,9 @@ void trainRds(Rds *rds, DataSet *ds) {
     free(val_labels);
 }
 
-void classifyData(const Rds *rds,
-		  PersistentFloatMatrix *pfm,
-		  Label *labels) {
+void classifyDataWithRds(const Rds *rds,
+			 PersistentFloatMatrix *pfm,
+			 Label *labels) {
     int i;
     float *feature_vals;
 

@@ -253,7 +253,7 @@ const char *testTrainRds4() {
     return 0;
 }
 
-const char *testClassifyData() {
+const char *testClassifyDataWithRds() {
     RestrictedDecisionStump rds;
     DataSet *ds;
     Label res_labels[10];
@@ -266,7 +266,7 @@ const char *testClassifyData() {
     ds = getDataSet1();
     trainRds(&rds, ds);
 
-    classifyData(&rds, ds->data, res_labels);
+    classifyDataWithRds(&rds, ds->data, res_labels);
 
     for (i = 0; i < 10; i++) {
 	mu_assert("Wrong res label", res_labels[i] == ds->labels[i]);
@@ -279,7 +279,7 @@ const char *testClassifyData() {
     ds = getDataSet3();
     trainRds(&rds, ds);
 
-    classifyData(&rds, ds->data, res_labels);
+    classifyDataWithRds(&rds, ds->data, res_labels);
 
     for (i = 0; i < 10; i++) {
 	mu_assert("Wrong res label", res_labels[i] == ds->labels[i]);
