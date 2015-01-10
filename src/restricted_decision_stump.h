@@ -12,6 +12,7 @@ struct RestrictedDecisionStump {
 };
 
 typedef struct RestrictedDecisionStump RestrictedDecisionStump;
+typedef RestrictedDecisionStump Rds;
 
 RestrictedDecisionStump createRds(int feature_idx);
 void trainRds(RestrictedDecisionStump *rds, struct DataSet *ds);

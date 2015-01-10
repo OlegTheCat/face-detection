@@ -9,6 +9,7 @@ struct PersistentFloatMatrix {
 };
 
 typedef struct PersistentFloatMatrix PersistentFloatMatrix;
+typedef PersistentFloatMatrix Pfm;
 
 PersistentFloatMatrix *createPfm(const char *storage_path,
 				 int rows,

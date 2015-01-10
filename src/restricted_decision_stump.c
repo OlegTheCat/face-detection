@@ -7,8 +7,6 @@
 
 #include "persistent_float_matrix.h"
 
-typedef RestrictedDecisionStump Rds;
-
 Rds createRds(int feature_idx) {
     Rds rds;
 

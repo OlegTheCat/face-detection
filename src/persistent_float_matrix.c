@@ -16,7 +16,6 @@ struct PersistentFloatMatrixImpl {
 };
 
 typedef struct PersistentFloatMatrixImpl Pfmi;
-typedef struct PersistentFloatMatrix Pfm;
 
 Pfmi *createImpl(const char *storage_path, int rows, int cols) {
     Pfmi *pfmi;
