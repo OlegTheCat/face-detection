@@ -3,6 +3,8 @@
 #include <math.h>
 #include <float.h>
 #include <stdio.h>
+#include <string.h>
+#include <assert.h>
 
 #include "data_set.h"
 #include "persistent_float_matrix.h"
@@ -99,14 +101,13 @@ void trainWeak(AdaBoost *ab, DataSet *ds, float *weights) {
 				     ds->labels,
 				     weights,
 				     getExamplesNum(ds));
-
+	assert(!isnan(wg_error));
 	if (wg_error < min_wg_error) {
 	    min_wg_error = wg_error;
 	    best_stump = stumps[i];
 	}
     }
 
-    // Add handling of beta == 0
     beta = min_wg_error / (1 - min_wg_error);
     alpha = logf(1 / beta);
 
@@ -124,9 +125,10 @@ void trainWeak(AdaBoost *ab, DataSet *ds, float *weights) {
 
     wrds.wg = alpha;
     wrds.stump = best_stump;
-
+    /* printf("Collecting stump with feature_idx = %d\n", best_stump.feature_idx); */
     addToArrayList(&ab->weighted_stumps, &wrds);
 
+    ab->threshold += 0.5 * alpha;
     free(res_labels);
     free(stumps);
 }
@@ -149,10 +151,38 @@ void trainAdaBoost(AdaBoost *ab, DataSet *ds) {
 void classifyDataWithAdaBoost(const AdaBoost *ab,
 			      Pfm *data,
 			      Label *labels) {
-    (void)ab;
-    (void)data;
-    (void)labels;
+    Label *rds_labels;
+    float *wrds_output;
+    int i, j;
+    Wrds *wrds;
+
+    wrds_output = malloc(sizeof(float) * data->rows);
+    memset(wrds_output, 0, sizeof(float) * data->rows);
+    rds_labels = malloc(sizeof(Label) * data->rows);
+
+    for (i = 0; i < ab->weighted_stumps.size; i++) {
+	wrds = getFromArrayList(&ab->weighted_stumps, i);
+	classifyDataWithRds(&wrds->stump, data, rds_labels);
+
+	for (j = 0; j < data->rows; j++) {
+	    if (rds_labels[j] == positive_label) {
+		wrds_output[j] += wrds->wg;
+	    }
+	}
+    }
+
+    for (i = 0; i < data->rows; i++) {
+	if (wrds_output[i] >= ab->threshold) {
+	    labels[i] = positive_label;
+	} else {
+	    labels[i] = negative_label;
+	}
+    }
+
+    free(wrds_output);
+    free(rds_labels);
 }
+
 void deleteAdaBoost(AdaBoost *ab) {
     if (ab != NULL) {
 	deleteArrayList(&ab->weighted_stumps);

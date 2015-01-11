@@ -7,8 +7,8 @@
 
 #define RDS_STORAGE_FILE "rds_ds.storage"
 
-static PersistentFloatMatrix *getDataForDataSet() {
-    PersistentFloatMatrix *data;
+static Pfm *getDataForDataSet() {
+    Pfm *data;
     float buf[10];
     int i;
 
@@ -23,7 +23,6 @@ static PersistentFloatMatrix *getDataForDataSet() {
     }
 
     return data;
-
 }
 
 static Label *getLabels1ForDataSet(int *num_pos_examples, int *num_neg_examples) {
@@ -173,7 +172,7 @@ static DataSet *getDataSet4() {
 
 
 const char *testTrainRds1() {
-    RestrictedDecisionStump rds;
+    Rds rds;
     DataSet *ds;
 
     system("rm -f " RDS_STORAGE_FILE);
@@ -194,7 +193,7 @@ const char *testTrainRds1() {
 }
 
 const char *testTrainRds2() {
-    RestrictedDecisionStump rds;
+    Rds rds;
     DataSet *ds;
 
     system("rm -f " RDS_STORAGE_FILE);
@@ -214,7 +213,7 @@ const char *testTrainRds2() {
 }
 
 const char *testTrainRds3() {
-    RestrictedDecisionStump rds;
+    Rds rds;
     DataSet *ds;
 
     system("rm -f " RDS_STORAGE_FILE);
@@ -233,7 +232,7 @@ const char *testTrainRds3() {
 }
 
 const char *testTrainRds4() {
-    RestrictedDecisionStump rds;
+    Rds rds;
     DataSet *ds;
 
     system("rm -f " RDS_STORAGE_FILE);
@@ -254,7 +253,7 @@ const char *testTrainRds4() {
 }
 
 const char *testClassifyDataWithRds() {
-    RestrictedDecisionStump rds;
+    Rds rds;
     DataSet *ds;
     Label res_labels[10];
     int i;
@@ -277,6 +276,65 @@ const char *testClassifyDataWithRds() {
 
 
     ds = getDataSet3();
+    trainRds(&rds, ds);
+
+    classifyDataWithRds(&rds, ds->data, res_labels);
+
+    for (i = 0; i < 10; i++) {
+	mu_assert("Wrong res label", res_labels[i] == ds->labels[i]);
+    }
+
+    deleteDataSet(ds);
+    system("rm -f " RDS_STORAGE_FILE);
+
+    return 0;
+}
+
+
+
+static Pfm *getDataForDataSet5() {
+    Pfm *data;
+    float buf[10];
+    int i;
+
+    for (i = 0; i < 10; i++) {
+	buf[i] = (float)(10 - i);
+    }
+
+    data = createPfm(RDS_STORAGE_FILE, 10, 5);
+
+    for (i = 0; i < 5; i++) {
+	storePfmCol(data, buf, i);
+    }
+
+    return data;
+}
+
+
+
+static DataSet *getDataSet5() {
+    DataSet *ds;
+
+    ds = malloc(sizeof(DataSet));
+    ds->data = getDataForDataSet5();
+    ds->labels = getLabels1ForDataSet(&ds->pos_examples_num,
+				      &ds->neg_examples_num);
+
+    return ds;
+}
+
+// Case where num_features < num_examples
+const char *testClassifyDataWithRds2() {
+    Rds rds;
+    DataSet *ds;
+    Label res_labels[10];
+    int i;
+
+    system("rm -f " RDS_STORAGE_FILE);
+
+    rds = createRds(3);
+
+    ds = getDataSet5();
     trainRds(&rds, ds);
 
     classifyDataWithRds(&rds, ds->data, res_labels);

@@ -207,12 +207,12 @@ void trainRds(Rds *rds, DataSet *ds) {
 }
 
 void classifyDataWithRds(const Rds *rds,
-			 PersistentFloatMatrix *pfm,
+			 Pfm *pfm,
 			 Label *labels) {
     int i;
     float *feature_vals;
 
-    feature_vals = malloc(sizeof(float) * pfm->cols);
+    feature_vals = malloc(sizeof(float) * pfm->rows);
     getPfmCol(pfm, feature_vals, rds->feature_idx);
 
     for (i = 0; i < pfm->rows; i++) {

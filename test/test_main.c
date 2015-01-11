@@ -1,6 +1,8 @@
 #include <stdio.h>
-#include "minunit.h"
+#include <stdlib.h>
+#include <time.h>
 
+#include "minunit.h"
 #include "pgm_test.h"
 #include "array_list_test.h"
 #include "data_set_test.h"
@@ -50,16 +52,22 @@ static const char *all_tests() {
     mu_run_test(testTrainRds3);
     mu_run_test(testTrainRds4);
     mu_run_test(testClassifyDataWithRds);
+    mu_run_test(testClassifyDataWithRds2);
     mu_run_test(testCreateAdaBoost);
     mu_run_test(testTrainAdaBoost1);
     mu_run_test(testTrainAdaBoost2);
-    mu_run_test(testClassifyDataWithAdaBoost);
+    /* mu_run_test(testClassifyDataWithAdaBoost); */
+    mu_run_test(testClassifyDataWithAdaBoost2);
 
     return 0;
 }
 
 int main() {
-    const char *result = all_tests();
+    const char *result;
+
+    srand(time(NULL));
+
+    result = all_tests();
     if (result != 0) {
 	fprintf(stderr, "%s\n", result);
     } else {
