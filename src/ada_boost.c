@@ -1,6 +1,8 @@
 #include "ada_boost.h"
 
 #include <math.h>
+#include <float.h>
+#include <stdio.h>
 
 #include "data_set.h"
 #include "persistent_float_matrix.h"
@@ -57,21 +59,6 @@ void updateWeigths(const Label *res_labels,
     }
 }
 
-int misclassifiedExamplesNum(const Label *res_labels,
-			     const Label *labels,
-			     int num_examples) {
-    int i, misclassified_num;
-
-    misclassified_num = 0;
-    for (i = 0; i < num_examples; i++) {
-	if (res_labels[i] != labels[i]) {
-	    misclassified_num++;
-	}
-    }
-
-    return misclassified_num;
-}
-
 float calcWeightedError(const Label *res_labels,
 			const Label *labels,
 			const float *weights,
@@ -105,6 +92,7 @@ void trainWeak(AdaBoost *ab, DataSet *ds, float *weights) {
     }
 
     res_labels = malloc(sizeof(float) * getExamplesNum(ds));
+    min_wg_error = FLT_MAX;
     for (i = 0; i < getFeaturesNum(ds); i++) {
 	classifyDataWithRds(&stumps[i], ds->data, res_labels);
 	wg_error = calcWeightedError(res_labels,
@@ -121,6 +109,10 @@ void trainWeak(AdaBoost *ab, DataSet *ds, float *weights) {
     // Add handling of beta == 0
     beta = min_wg_error / (1 - min_wg_error);
     alpha = logf(1 / beta);
+
+    /* printf("min_wg_error == %f\n", min_wg_error); */
+    /* printf("beta == %f\n", beta); */
+    /* printf("alpha == %f\n", alpha); */
 
     classifyDataWithRds(&best_stump, ds->data, res_labels);
 

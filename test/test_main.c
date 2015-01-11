@@ -51,7 +51,8 @@ static const char *all_tests() {
     mu_run_test(testTrainRds4);
     mu_run_test(testClassifyDataWithRds);
     mu_run_test(testCreateAdaBoost);
-    mu_run_test(testTrainAdaBoost);
+    mu_run_test(testTrainAdaBoost1);
+    mu_run_test(testTrainAdaBoost2);
     mu_run_test(testClassifyDataWithAdaBoost);
 
     return 0;
