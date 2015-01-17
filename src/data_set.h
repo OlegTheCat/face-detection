@@ -5,10 +5,12 @@
 
 struct PersistentFloatMatrix;
 
-typedef enum {
+enum Label {
     positive_label,
     negative_label
-} Label;
+};
+
+typedef enum Label Label;
 
 struct DataSet {
     struct PersistentFloatMatrix *data;

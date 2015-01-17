@@ -1,13 +1,19 @@
+include Makefile.opencl
+
 CC := gcc
+
 VALGRIND := valgrind
 VALGRIND_OPTS += --tool=memcheck --leak-check=full
-C_OPTS += -Wall -Wextra -Werror -std=c99
+
+C_OPTS += -Wall -Wextra -Werror -std=c99 $(INCLUDE_DIRS:%=-I%)
 ifdef RELEASE
 C_OPTS += -O3 -DNDEBUG
 else
 C_OPTS += -g3 -O0
 endif
-LD_OPTS += -lm
+
+LIBS += -lm
+LD_OPTS += $(LIBS_DIRS:%=-L%) $(LIBS)
 
 
 BIN_DIR := target/
@@ -50,10 +56,10 @@ $(BIN_TEST_TARGET) : $(BIN_TARGET) $(TEST_OBJS)
 test-target : $(BIN_TEST_TARGET)
 
 test-run : test-target
-	./$(BIN_TEST_TARGET)
+	$(LAUNCH_OPTS) ./$(BIN_TEST_TARGET)
 
 valgrind-test-run : test-target
-	$(VALGRIND) $(VALGRIND_OPTS) ./$(BIN_TEST_TARGET)
+	$(LAUNCH_OPTS) $(VALGRIND) $(VALGRIND_OPTS) ./$(BIN_TEST_TARGET)
 
 clean:
 	rm -rvf $(BIN_DIR)
