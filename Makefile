@@ -1,4 +1,4 @@
-# include Makefile.opencl
+include Makefile.opencl
 
 CC := gcc
 
