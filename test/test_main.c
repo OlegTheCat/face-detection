@@ -6,7 +6,6 @@
 
 #include "rds_ig_train_evaluator.h"
 #include "rds_single_threaded_classify_evaluator.h"
-#include "rds_ocl_bf_train_evaluator.h"
 
 #include "minunit.h"
 #include "pgm_test.h"
@@ -24,18 +23,17 @@ int tests_run = 0;
 static void createConfigSet(ImplConfig ***configs, int *num_configs) {
     ImplConfig *config;
 
-    *num_configs = 2;
+    *num_configs = 1;
     *configs = malloc(sizeof(ImplConfig *) * (*num_configs));
 
     config = malloc(sizeof(ImplConfig));
     config->rds_train_evaluator = createRdsIgTrainEvaluator();
     config->rds_classify_evaluator = createRdsSingleThreadedClassifyEvaluator();
+    config->ada_boost_train_evaluator = NULL;
+    config->ada_boost_classify_evaluator = NULL;
+
     (*configs)[0] = config;
 
-    config = malloc(sizeof(ImplConfig));
-    config->rds_train_evaluator = createRdsOclBfTrainEvaluator();
-    config->rds_classify_evaluator = createRdsSingleThreadedClassifyEvaluator();
-    (*configs)[1] = config;
 }
 
 static const char *dummy() {
