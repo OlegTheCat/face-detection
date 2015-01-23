@@ -24,7 +24,7 @@ int tests_run = 0;
 static void createConfigSet(ImplConfig ***configs, int *num_configs) {
     ImplConfig *config;
 
-    *num_configs = 2;
+    *num_configs = 1;
     *configs = malloc(sizeof(ImplConfig *) * (*num_configs));
 
     config = malloc(sizeof(ImplConfig));

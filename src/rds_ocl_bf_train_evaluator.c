@@ -1,5 +1,7 @@
 #include "rds_ocl_bf_train_evaluator.h"
 
+#include <CL/cl.h>
+
 #include "restricted_decision_stump.h"
 #include "evaluators.h"
 
