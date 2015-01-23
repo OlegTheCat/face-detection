@@ -24,7 +24,7 @@ void setImplConfig(ImplConfig *impl_config) {
     global_impl_config = impl_config;
 }
 
-const ImplConfig *getCurrentImplConfig() {
+ImplConfig *getCurrentImplConfig() {
     return global_impl_config;
 }
 

@@ -15,5 +15,5 @@ typedef struct ImplConfig ImplConfig;
 
 ImplConfig *getDefaultImplConfig();
 void setImplConfig(ImplConfig *impl_config);
-const ImplConfig *getCurrentImplConfig();
+ImplConfig *getCurrentImplConfig();
 void deleteImplConfig(ImplConfig *ic);
