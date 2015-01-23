@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "impl_config.h"
+#include "ocl_env.h"
 
 #include "minunit.h"
 #include "pgm_test.h"
@@ -68,6 +69,7 @@ int main() {
     const char *result;
 
     srand(time(NULL));
+    initSingleGpuEnvironment();
     setImplConfig(getDefaultImplConfig());
 
     result = runAllTests();
@@ -81,5 +83,6 @@ int main() {
     printf("Tests run: %d\n", tests_run);
 
     deleteImplConfig(getCurrentImplConfig());
+    deleteOclEnvironment();
     return result != 0;
 }

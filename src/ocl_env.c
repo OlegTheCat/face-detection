@@ -17,30 +17,24 @@ void initSingleGpuEnvironment() {
     cl_command_queue command_queue;
     cl_uint num_platforms, num_devices;
 
-    HANDLE_ERROR_RET(clGetPlatformIDs(MAX_PLATFORMS_NUM, NULL, &num_platforms));
+    HANDLE_ERROR_RET(clGetPlatformIDs(1, &platform, &num_platforms));
 
     if (num_platforms == 0) {
 	printf("Couldn't find any OCL platform. Exiting.");
 	exit(EXIT_FAILURE);
     } else if (num_platforms > 1) {
-	printf("Found %d platforms, initializing env with first one.\n", num_platforms);
+	printf("Found %d platforms, env initialized with first one.\n", num_platforms);
     }
 
-    HANDLE_ERROR_RET(clGetPlatformIDs(1, &platform, NULL));
-
-    HANDLE_ERROR_RET(clGetDeviceIDs(platform,
-				    CL_DEVICE_TYPE_GPU,
-				    MAX_DEVICES_NUM,
-				    NULL, &num_devices));
+    HANDLE_ERROR_RET(clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, &num_devices));
 
     if (num_devices == 0) {
-	printf("Couldn't find any GPU device. Exiting.");
-	exit(EXIT_FAILURE);
+    	printf("Couldn't find any GPU device. Exiting.");
+    	exit(EXIT_FAILURE);
     } else if (num_devices > 1) {
-	printf("Found %d devices, initializing env with first one.\n", num_devices);
+    	printf("Found %d devices, env initialized with first one.\n", num_devices);
     }
 
-    HANDLE_ERROR_RET(clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL));
     HANDLE_ERROR_PAR(context = clCreateContext(NULL, 1, &device, NULL, NULL, &error));
     HANDLE_ERROR_PAR(command_queue = clCreateCommandQueue(context, device, 0, &error));
 
@@ -64,7 +58,11 @@ void deleteOclEnvironment() {
 	for (j = 0; j < ocl_env.contexts[i].num_devices; j++) {
 	    HANDLE_ERROR_RET(clReleaseCommandQueue(ocl_env.contexts[i].queues[j]));
 	}
+	if (ocl_env.contexts[i].devices != NULL) free(ocl_env.contexts[i].devices);
+	if (ocl_env.contexts[i].queues != NULL) free(ocl_env.contexts[i].queues);
 	HANDLE_ERROR_RET(clReleaseContext(ocl_env.contexts[i].ocl_context));
     }
-}
 
+    if (ocl_env.all_devices != NULL) free(ocl_env.all_devices);
+    if (ocl_env.contexts != NULL) free(ocl_env.contexts);
+}

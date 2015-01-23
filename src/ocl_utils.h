@@ -4,8 +4,8 @@
 #include <stdio.h>
 
 void handleError(cl_int err, const char *file, int line) {
-     fprintf(stderr, "Error encountered, code %d:\nAt line: %d\nIn file: %s\n",
-	     err, line, file);
+     fprintf(stderr, "%s:%d: Error encountered, code %d\n",
+	     file, line, err);
 }
 
 #define HANDLE_ERROR_RET(call)			    \
@@ -15,7 +15,7 @@ void handleError(cl_int err, const char *file, int line) {
             handleError(error, __FILE__, __LINE__); \
 	    exit(EXIT_FAILURE);			    \
 	}					    \
-    } while(0)
+    } while (0)
 
 #define HANDLE_ERROR_PAR(call)			    \
     do {					    \
@@ -25,5 +25,5 @@ void handleError(cl_int err, const char *file, int line) {
             handleError(error, __FILE__, __LINE__); \
 	    exit(EXIT_FAILURE);			    \
 	}					    \
-    } while(0)
+    } while (0)
 
