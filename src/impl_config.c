@@ -4,6 +4,8 @@
 
 #include "rds_ig_train_evaluator.h"
 #include "rds_single_threaded_classify_evaluator.h"
+#include "ab_st_train_evaluator.h"
+#include "ab_st_classify_evaluator.h"
 
 ImplConfig *global_impl_config;
 
@@ -14,8 +16,8 @@ ImplConfig *getDefaultImplConfig() {
 
     ic->rds_train_evaluator = createRdsIgTrainEvaluator();
     ic->rds_classify_evaluator = createRdsSingleThreadedClassifyEvaluator();
-    ic->ada_boost_train_evaluator = NULL;
-    ic->ada_boost_classify_evaluator = NULL;
+    ic->ada_boost_train_evaluator = createAbStTrainEvaluator();
+    ic->ada_boost_classify_evaluator = createAbStClassifyEvaluator();
 
     return ic;
 }
