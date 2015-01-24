@@ -1,0 +1,4 @@
+MPI_NP ?= 4
+CC := mpicc
+
+LAUNCH_OPTS += mpiexec -np $(MPI_NP)

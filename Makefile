@@ -1,9 +1,10 @@
 # include Makefile.opencl
+include Makefile.mpi
 
-CC := gcc
+CC ?= gcc
 
 VALGRIND := valgrind
-VALGRIND_OPTS += --tool=memcheck --leak-check=full
+VALGRIND_OPTS += --tool=memcheck --leak-check=full --trace-children=yes --log-file=valgrind.log.%p
 
 C_OPTS += -Wall -Wextra -Werror -std=c99 $(INCLUDE_DIRS:%=-I%)
 ifdef RELEASE
@@ -62,7 +63,7 @@ valgrind-test-run : test-target
 	$(LAUNCH_OPTS) $(VALGRIND) $(VALGRIND_OPTS) ./$(BIN_TEST_TARGET)
 
 clean:
-	rm -rvf $(BIN_DIR)
+	rm -rvf $(BIN_DIR) valgrind.log.*
 
 check-syntax:
 	$(CC) $(C_OPTS) -o /dev/null -S ${CHK_SOURCES}
