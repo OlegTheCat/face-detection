@@ -1,7 +1,6 @@
 #pragma once
 
-#include "persistent_float_matrix.h"
+struct PersistentFloatMatrixImpl;
 
-
-Pfmi *createPfmFileImpl(const char *storage_path, int rows, int cols);
+struct PersistentFloatMatrixImpl *createPfmFileImpl(const char *storage_path, int rows, int cols);
 
