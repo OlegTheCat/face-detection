@@ -6,6 +6,7 @@
 
 #include "utils.h"
 #include "array_list.h"
+#include "persistent_float_matrix.h"
 
 struct PfmiFileImplData {
     FILE *file;
