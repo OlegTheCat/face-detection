@@ -151,6 +151,7 @@ int storePfmiFileCol(Pfmi *pfmi, const float *col, int col_idx) {
     PfmiFileImplData *pfmi_data;
 
     pfmi_data = (PfmiFileImplData *)pfmi->impl_data;
+
     f = pfmi_data->file;
     extendPfmCol(col,
 		 pfmi_data->col_buf,

@@ -16,6 +16,7 @@
 #include "persistent_float_matrix_test.h"
 #include "restricted_decision_stump_test.h"
 #include "ada_boost_test.h"
+#include "partial_pfm_test.h"
 
 int tests_run = 0;
 
@@ -68,6 +69,9 @@ static const char *runAllTests() {
 	mu_run_test(testTrainAdaBoost2);
 	/* mu_run_test(testClassifyDataWithAdaBoost); */
 	mu_run_test(testClassifyDataWithAdaBoost2);
+	mu_run_test(testCreatePfmPartialFileImpl);
+	mu_run_test(testPartialPfmGetStoreCol);
+	mu_run_test(testPartialPfmRemoveRow);
     }
 
 
