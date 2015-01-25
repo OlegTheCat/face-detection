@@ -3,9 +3,9 @@
 struct PersistentFloatMatrixImpl;
 struct PersistentFloatMatrix;
 
-typedef int (*GetColFunc)(struct PersistentFloatMatrix *pfm, float *buf, int col_idx);
-typedef int (*StoreColFunc)(struct PersistentFloatMatrix *pfm, const float *col, int col_idx);
-typedef int (*RemoveRowFunc)(struct PersistentFloatMatrix *pfm, int row_idx);
+typedef int (*GetColFunc)(struct PersistentFloatMatrixImpl *pfm, float *buf, int col_idx);
+typedef int (*StoreColFunc)(struct PersistentFloatMatrixImpl *pfm, const float *col, int col_idx);
+typedef int (*RemoveRowFunc)(struct PersistentFloatMatrixImpl *pfm, int row_idx);
 typedef void (*ImplDeleteFunc)(struct PersistentFloatMatrixImpl *pfmi);
 
 struct PersistentFloatMatrixImpl {

@@ -29,15 +29,16 @@ Pfm *createPfmWithImpl(const char *storage_path,
 }
 
 int getPfmCol(PersistentFloatMatrix *pfm, float *buf, int col_idx) {
-    return pfm->impl->get_col_func(pfm, buf, col_idx);
+    return pfm->impl->get_col_func(pfm->impl, buf, col_idx);
 }
 
 int storePfmCol(PersistentFloatMatrix *pfm, const float *col, int col_idx) {
-    return pfm->impl->store_col_func(pfm, col, col_idx);
+    return pfm->impl->store_col_func(pfm->impl, col, col_idx);
 }
 
 int removePfmRow(PersistentFloatMatrix *pfm, int row_idx) {
-    return pfm->impl->remove_row_func(pfm, row_idx);
+    pfm->rows--;
+    return pfm->impl->remove_row_func(pfm->impl, row_idx);
 }
 
 

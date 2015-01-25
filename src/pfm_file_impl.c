@@ -109,11 +109,11 @@ void filterPfmCol(const float *retrieved_col,
     }
 }
 
-int getPfmiFileCol(Pfm *pfm, float *buf, int col_idx) {
+int getPfmiFileCol(Pfmi *pfmi, float *buf, int col_idx) {
     FILE *f;
     PfmiFileImplData *pfmi_data;
 
-    pfmi_data = (PfmiFileImplData *)pfm->impl->impl_data;
+    pfmi_data = (PfmiFileImplData *)pfmi->impl_data;
     f = pfmi_data->file;
     seekToCol(pfmi_data, col_idx);
     readPfmiBuffer(pfmi_data);
@@ -146,11 +146,11 @@ void extendPfmCol(const float *in_col,
     }
 }
 
-int storePfmiFileCol(Pfm *pfm, const float *col, int col_idx) {
+int storePfmiFileCol(Pfmi *pfmi, const float *col, int col_idx) {
     FILE *f;
     PfmiFileImplData *pfmi_data;
 
-    pfmi_data = (PfmiFileImplData *)pfm->impl->impl_data;
+    pfmi_data = (PfmiFileImplData *)pfmi->impl_data;
     f = pfmi_data->file;
     extendPfmCol(col,
 		 pfmi_data->col_buf,
@@ -177,14 +177,13 @@ int adjustRowIdx(int row_idx, const ArrayList *removed_rows) {
     return row_idx + row_offset;
 }
 
-int removePfmiFileRow(PersistentFloatMatrix *pfm, int row_idx) {
+int removePfmiFileRow(Pfmi *pfmi, int row_idx) {
     int adjusted_row_idx;
     PfmiFileImplData *pfmi_data;
 
-    pfmi_data = (PfmiFileImplData *)pfm->impl->impl_data;
+    pfmi_data = (PfmiFileImplData *)pfmi->impl_data;
     adjusted_row_idx = adjustRowIdx(row_idx, &pfmi_data->removed_rows);
     addToArrayList(&pfmi_data->removed_rows, &adjusted_row_idx);
-    pfm->rows--;
     return 0;
 }
 
