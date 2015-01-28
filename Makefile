@@ -56,10 +56,13 @@ $(BIN_TEST_TARGET) : $(BIN_TARGET) $(TEST_OBJS)
 
 test-target : $(BIN_TEST_TARGET)
 
-test-run : test-target
+test-clean :
+	rm -v test*.data test_img*.pgm
+
+test-run : test-target | test-clean
 	$(LAUNCH_OPTS) ./$(BIN_TEST_TARGET)
 
-valgrind-test-run : test-target
+valgrind-test-run : test-target | test-clean
 	$(LAUNCH_OPTS) $(VALGRIND) $(VALGRIND_OPTS) ./$(BIN_TEST_TARGET)
 
 clean:
@@ -68,4 +71,4 @@ clean:
 check-syntax:
 	$(CC) $(C_OPTS) -o /dev/null -S ${CHK_SOURCES}
 
-.PHONY: check-syntax clean run target test-target test-run valgrind-test-run
+.PHONY: check-syntax clean run target test-target test-run valgrind-test-run test-clean
