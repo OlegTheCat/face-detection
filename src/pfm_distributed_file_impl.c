@@ -113,5 +113,5 @@ Pfmi *createPfmDistributedFileImpl(const char *storage_path,
     pfmi->remove_row_func = removePfmiDistributedFileRow;
     pfmi->impl_delete_func = deletePfmiDistributedFile;
 
-    return 0;
+    return pfmi;
 }
