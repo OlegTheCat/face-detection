@@ -57,7 +57,7 @@ $(BIN_TEST_TARGET) : $(BIN_TARGET) $(TEST_OBJS)
 test-target : $(BIN_TEST_TARGET)
 
 test-clean :
-	rm -v test*.data test_img*.pgm
+	rm -vf test*.data test_img*.pgm valgrind*.log*
 
 test-run : test-target | test-clean
 	$(LAUNCH_OPTS) ./$(BIN_TEST_TARGET)

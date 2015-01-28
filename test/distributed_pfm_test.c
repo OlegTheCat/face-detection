@@ -3,16 +3,15 @@
 #include <stdlib.h>
 
 #include "minunit.h"
+#include "test_utils.h"
 #include "persistent_float_matrix.h"
 #include "pfm_distributed_file_impl.h"
 #include "utils.h"
 
-#define DISTRIBUTED_PFMI_STORAGE_FILE "distributed_storage.storage"
-
-Pfmi *getDistributedFilePfmi(int rows, int cols) {
+Pfmi *getDistributedFilePfmi(const char *file_name, int rows, int cols) {
     Pfmi *pfmi;
 
-    pfmi = createPfmDistributedFileImpl(DISTRIBUTED_PFMI_STORAGE_FILE,
+    pfmi = createPfmDistributedFileImpl(file_name,
 					cols,
 					rows);
 
@@ -26,18 +25,17 @@ const char *testCreatePfmDistributedFileImpl() {
     rows = 100;
     cols = 200;
 
-    system("rm -f " DISTRIBUTED_PFMI_STORAGE_FILE);
-    pfm = createPfmWithImpl(DISTRIBUTED_PFMI_STORAGE_FILE,
-			    rows,
-			    cols,
-			    getDistributedFilePfmi(rows, cols));
+    WITH_TEST_FILE_NAME
+	(pfm = createPfmWithImpl(FILE_NAME_HANDLE,
+				 rows,
+				 cols,
+				 getDistributedFilePfmi(FILE_NAME_HANDLE, rows, cols)));
 
     mu_assert("Error while creating pfm", pfm != NULL);
     mu_assert("Wrong rows num", pfm->rows == rows);
     mu_assert("Wrong cols num", pfm->cols == cols);
 
     deletePfm(pfm);
-    system("rm -f " DISTRIBUTED_PFMI_STORAGE_FILE);
     return 0;
 }
 

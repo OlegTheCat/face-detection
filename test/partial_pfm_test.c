@@ -3,16 +3,15 @@
 #include <stdlib.h>
 
 #include "minunit.h"
+#include "test_utils.h"
 #include "persistent_float_matrix.h"
 #include "pfm_partial_file_impl.h"
 #include "utils.h"
 
-#define PARTIAL_PFMI_STORAGE_FILE "partial_storage.storage"
-
-Pfmi *getPartiaFilePfmi(int start_col, int end_col, int rows) {
+Pfmi *getPartiaFilePfmi(const char *file_name, int start_col, int end_col, int rows) {
     Pfmi *partial_file_pfmi;
 
-    partial_file_pfmi = createPfmPartialFileImpl(PARTIAL_PFMI_STORAGE_FILE,
+    partial_file_pfmi = createPfmPartialFileImpl(file_name,
 						 start_col,
 						 end_col,
 						 rows);
@@ -26,18 +25,18 @@ const char *testCreatePfmPartialFileImpl() {
     rows = 100;
     cols = 200;
 
-    system("rm -f " PARTIAL_PFMI_STORAGE_FILE);
-    pfm = createPfmWithImpl(PARTIAL_PFMI_STORAGE_FILE,
-			    rows,
-			    cols,
-			    getPartiaFilePfmi(30, 70, rows));
+    WITH_TEST_FILE_NAME
+	(pfm = createPfmWithImpl(FILE_NAME_HANDLE,
+				 rows,
+				 cols,
+				 getPartiaFilePfmi(FILE_NAME_HANDLE, 30, 70, rows)));
 
     mu_assert("Error while creating pfm", pfm != NULL);
     mu_assert("Wrong rows num", pfm->rows == rows);
     mu_assert("Wrong cols num", pfm->cols == cols);
 
     deletePfm(pfm);
-    system("rm -f " PARTIAL_PFMI_STORAGE_FILE);
+
     return 0;
 }
 
@@ -47,11 +46,11 @@ const char *testPartialPfmGetStoreCol() {
     int i;
     int err;
 
-    system("rm -f " PARTIAL_PFMI_STORAGE_FILE);
-
-    pfm = createPfmWithImpl(PARTIAL_PFMI_STORAGE_FILE,
-			    10, 20,
-			    getPartiaFilePfmi(5, 10, 10));
+    WITH_TEST_FILE_NAME
+	(pfm = createPfmWithImpl(FILE_NAME_HANDLE,
+				 10, 20,
+				 getPartiaFilePfmi(FILE_NAME_HANDLE,
+						   5, 10, 10)));
 
     for (i = 0; i < 10; i++) {
 	col[i] = (float)i;
@@ -71,7 +70,6 @@ const char *testPartialPfmGetStoreCol() {
     err = getPfmCol(pfm, col, 10);
     mu_assert("Wrong get #2 error code", err == PFMI_OUT_OF_COL_RANGE);
 
-    system("rm -f " PARTIAL_PFMI_STORAGE_FILE);
     deletePfm(pfm);
     return 0;
 }
@@ -81,11 +79,11 @@ const char *testPartialPfmRemoveRow() {
     float col[10];
     int i;
 
-    system("rm -f " PARTIAL_PFMI_STORAGE_FILE);
-
-    pfm = createPfmWithImpl(PARTIAL_PFMI_STORAGE_FILE,
-			    10, 20,
-			    getPartiaFilePfmi(5, 15, 10));
+    WITH_TEST_FILE_NAME
+	(pfm = createPfmWithImpl(FILE_NAME_HANDLE,
+				 10, 20,
+				 getPartiaFilePfmi(FILE_NAME_HANDLE,
+						   5, 15, 10)));
 
     for (i = 0; i < 10; i++) {
 	col[i] = (float)(i + 1);
@@ -121,7 +119,6 @@ const char *testPartialPfmRemoveRow() {
     mu_assert("Wrong retrieved col value at pos #1", floatEqual(col[0], 10));
     mu_assert("Wrong retrieved col value at pos #6", floatEqual(col[6], 16));
 
-    system("rm -f " PARTIAL_PFMI_STORAGE_FILE);
     deletePfm(pfm);
     return 0;
 
