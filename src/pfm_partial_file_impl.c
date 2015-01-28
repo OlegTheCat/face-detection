@@ -14,7 +14,7 @@ struct PfmiPartialFileImplData {
 
 typedef struct PfmiPartialFileImplData PfmiPartialFileImplData;
 
-PfmiPartialFileImplData *createPfmiData(const char *storage_path,
+PfmiPartialFileImplData *createPartialPfmiData(const char *storage_path,
 					int start_col,
 					int end_col,
 					int rows) {
@@ -95,7 +95,7 @@ Pfmi *createPfmPartialFileImpl(const char *storage_path,
     Pfmi *pfmi;
     void *data;
 
-    data = createPfmiData(storage_path, start_col, end_col, rows);
+    data = createPartialPfmiData(storage_path, start_col, end_col, rows);
 
     if (data == NULL) return NULL;
 

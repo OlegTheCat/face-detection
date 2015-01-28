@@ -60,11 +60,11 @@ void deletePfmiDistributedFile(Pfmi *pfmi) {
     }
 }
 
-PfmiDistributedFileImplData *createPfmiData(const char *storage_path,
-					    int comm_rank,
-					    int comm_size,
-					    int cols,
-					    int rows) {
+PfmiDistributedFileImplData *createDistributedPfmiData(const char *storage_path,
+						       int comm_rank,
+						       int comm_size,
+						       int cols,
+						       int rows) {
     PfmiDistributedFileImplData *data;
     Pfmi *partial_file_impl;
     int start_col, end_col, cols_per_process;
@@ -104,7 +104,7 @@ Pfmi *createPfmDistributedFileImpl(const char *storage_path,
 
     manglePathForProcess(storage_path, comm_rank, proc_storage_path);
 
-    data = createPfmiData(proc_storage_path, comm_rank, comm_size, cols, rows);
+    data = createDistributedPfmiData(proc_storage_path, comm_rank, comm_size, cols, rows);
 
     pfmi = malloc(sizeof(Pfmi));
     pfmi->impl_data = data;

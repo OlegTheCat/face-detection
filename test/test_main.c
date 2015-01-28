@@ -17,6 +17,7 @@
 #include "restricted_decision_stump_test.h"
 #include "ada_boost_test.h"
 #include "partial_pfm_test.h"
+#include "distributed_pfm_test.h"
 
 int tests_run = 0;
 
@@ -74,7 +75,11 @@ static const char *runAllTests() {
 	mu_run_test(testPartialPfmRemoveRow);
     }
 
+    mu_run_test(testCreatePfmDistributedFileImpl);
+    mu_run_test(testDistributedPfmGetStoreCol);
+    mu_run_test(testDistributedPfmRemoveRow);
 
+    MPI_Barrier(MPI_COMM_WORLD);
     return 0;
 }
 
