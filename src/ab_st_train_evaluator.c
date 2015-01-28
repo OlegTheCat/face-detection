@@ -123,7 +123,7 @@ void trainWeak(AdaBoost *ab, DataSet *ds, float *weights) {
 
 void trainAdaBoostSingleThreaded(void *data,
 				 void *classifier,
-				 struct DataSet *ds) {
+				 DataSet *ds) {
     (void)data;
 
     float *weights;
@@ -144,7 +144,7 @@ void trainAdaBoostSingleThreaded(void *data,
 
 }
 
-struct TrainEvaluator *createAbStTrainEvaluator() {
+TrainEvaluator *createAbStTrainEvaluator() {
     TrainEvaluator *evaluator;
 
     evaluator = malloc(sizeof(TrainEvaluator));
