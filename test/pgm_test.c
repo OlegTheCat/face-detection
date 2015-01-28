@@ -3,9 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "minunit.h"
+#include "test_utils.h"
 #include "constants.h"
 #include "pgm.h"
-#include "minunit.h"
 #include "utils.h"
 
 const char *testReadImage() {
@@ -36,9 +37,10 @@ const char *testCreateImage() {
 
 const char *testSaveImage() {
     PgmImage *image, *restored;
-    const char *save_path = "test_save.pgm";
+    char save_path[MAX_TEST_FILE_NAME_LENGTH];
     int i, j;
 
+    getUniqueFileName("test_img", "pgm", save_path);
     image = readPgmImage(TEST_IMG);
     savePgmImage(save_path, image);
 
@@ -56,7 +58,6 @@ const char *testSaveImage() {
 	}
     }
 
-    system("rm test_save.pgm");
     deletePgmImage(image);
     deletePgmImage(restored);
     return 0;

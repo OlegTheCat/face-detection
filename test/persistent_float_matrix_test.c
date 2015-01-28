@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "minunit.h"
+#include "test_utils.h"
 #include "persistent_float_matrix.h"
 #include "utils.h"
 
@@ -13,15 +14,13 @@ const char *testCreatePfm() {
     rows = 100;
     cols = 200;
 
-    system("rm -f test_storage.storage*");
-    pfm = createPfm("test_storage.storage", rows, cols);
+    WITH_TEST_FILE_NAME(pfm = createPfm(FILE_NAME_HANDLE, rows, cols));
 
     mu_assert("Error while creating pfm", pfm != NULL);
     mu_assert("Wrong rows num", pfm->rows == rows);
     mu_assert("Wrong cols num", pfm->cols == cols);
 
     deletePfm(pfm);
-    system("rm -f test_storage.storage*");
     return 0;
 }
 
@@ -30,9 +29,7 @@ const char *testGetStorePfmCol() {
     float col[10];
     int i;
 
-    system("rm -f test_storage2.storage*");
-
-    pfm = createPfm("test_storage2.storage", 10, 20);
+    WITH_TEST_FILE_NAME(pfm = createPfm(FILE_NAME_HANDLE, 10, 20));
 
     for (i = 0; i < 10; i++) {
 	col[i] = (float)i;
@@ -56,7 +53,6 @@ const char *testGetStorePfmCol() {
 	mu_assert("Wrong value in col #10", floatEqual(col[i], i));
     }
 
-    system("rm -f test_storage2.storage");
     deletePfm(pfm);
     return 0;
 }
@@ -66,9 +62,7 @@ const char *testRemovePfmRow() {
     float col[10];
     int i;
 
-    system("rm -f test_storage3.storage*");
-
-    pfm = createPfm("test_storage3.storage", 10, 20);
+    WITH_TEST_FILE_NAME(pfm = createPfm(FILE_NAME_HANDLE, 10, 20));
 
     for (i = 0; i < 10; i++) {
 	col[i] = (float)(i + 1);
@@ -104,7 +98,6 @@ const char *testRemovePfmRow() {
     mu_assert("Wrong retrieved col value at pos #1", floatEqual(col[0], 10));
     mu_assert("Wrong retrieved col value at pos #6", floatEqual(col[6], 16));
 
-    system("rm -f test_storage3.storage*");
     deletePfm(pfm);
     return 0;
 }

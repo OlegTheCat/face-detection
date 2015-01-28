@@ -5,11 +5,10 @@
 #include <time.h>
 
 #include "minunit.h"
+#include "test_utils.h"
 #include "ada_boost.h"
 #include "data_set.h"
 #include "persistent_float_matrix.h"
-
-#define AB_STORAGE_FILE "ab_ds.storage"
 
 static float randomFloat() {
     return ((float)rand() / RAND_MAX) * rand();
@@ -35,7 +34,7 @@ static Pfm *getRandomData(int rows, int cols) {
     float *buf;
     int i, j;
 
-    data = createPfm(AB_STORAGE_FILE, rows, cols);
+    WITH_TEST_FILE_NAME(data = createPfm(FILE_NAME_HANDLE, rows, cols));
 
     buf = malloc(sizeof(float) * rows);
 
@@ -102,13 +101,11 @@ const char *testTrainAdaBoost1() {
     AdaBoost *ab;
     DataSet *ds;
 
-    system("rm -f " AB_STORAGE_FILE);
     ds = getRandomDataSet(50, 50);
     ab = createAdaBoost(3);
 
     trainAdaBoost(ab, ds);
 
-    system("rm -f " AB_STORAGE_FILE);
     deleteDataSet(ds);
     deleteAdaBoost(ab);
     return 0;
@@ -118,13 +115,11 @@ const char *testTrainAdaBoost2() {
     AdaBoost *ab;
     DataSet *ds;
 
-    system("rm -f " AB_STORAGE_FILE);
     ds = getRandomDataSet(2, 2);
     ab = createAdaBoost(10);
 
     trainAdaBoost(ab, ds);
 
-    system("rm -f " AB_STORAGE_FILE);
     deleteDataSet(ds);
     deleteAdaBoost(ab);
     return 0;
@@ -143,7 +138,6 @@ const char *testClassifyDataWithAdaBoost() {
     Label rds_labels[150];
     int i, ab_error, rds_error;
 
-    system("rm -f " AB_STORAGE_FILE);
     ds = getRandomDataSet(150, 100);
     ab = createAdaBoost(30);
 
@@ -168,7 +162,6 @@ const char *testClassifyDataWithAdaBoost() {
 	mu_assert("RDS performs better than AB", rds_error >= ab_error);
     }
 
-    system("rm -f " AB_STORAGE_FILE);
     deleteDataSet(ds);
     deleteAdaBoost(ab);
 
@@ -181,8 +174,6 @@ const char *testClassifyDataWithAdaBoost2() {
     DataSet *ds;
     Label res_labels[2];
     int i;
-
-    system("rm -f " AB_STORAGE_FILE);
 
     ds = getRandomDataSet(2, 2);
     ds->labels[0] = positive_label;
@@ -199,7 +190,6 @@ const char *testClassifyDataWithAdaBoost2() {
 	mu_assert("Wrong res_labels value", res_labels[i] == ds->labels[i]);
     }
 
-    system("rm -f " AB_STORAGE_FILE);
     deleteDataSet(ds);
     deleteAdaBoost(ab);
 
