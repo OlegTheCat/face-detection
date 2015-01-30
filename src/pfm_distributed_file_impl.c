@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #include "persistent_float_matrix.h"
-#include "pfm_partial_file_impl.h"
+#include "mpi_utils.h"
 
 struct PfmiDistributedFileImplData {
     Pfmi *partial_file_impl;
@@ -67,22 +67,13 @@ PfmiDistributedFileImplData *createDistributedPfmiData(const char *storage_path,
 						       int rows) {
     PfmiDistributedFileImplData *data;
     Pfmi *partial_file_impl;
-    int start_col, end_col, cols_per_process;
-    float cols_part;
+    Range cols_range;
 
-    cols_part = (float)1 / comm_size;
-    cols_per_process = cols_part * cols;
-
-    start_col = comm_rank * cols_per_process;
-    if (comm_rank != comm_size - 1) {
-	end_col = start_col + cols_per_process;
-    } else {
-	end_col = cols;
-    }
+    cols_range = getIdxRangeForProcess(cols, comm_rank, comm_size);
 
     partial_file_impl = createPfmPartialFileImpl(storage_path,
-						 start_col,
-						 end_col,
+						 cols_range.from,
+						 cols_range.to,
 						 rows);
 
     data = malloc(sizeof(PfmiDistributedFileImplData));

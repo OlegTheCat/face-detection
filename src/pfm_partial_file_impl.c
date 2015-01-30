@@ -5,6 +5,7 @@
 
 #include "persistent_float_matrix.h"
 #include "pfm_file_impl.h"
+#include "range.h"
 
 struct PfmiPartialFileImplData {
     Pfmi *file_impl;
@@ -33,19 +34,12 @@ PfmiPartialFileImplData *createPartialPfmiData(const char *storage_path,
     return data;
 }
 
-int inRange(int from, int to, int target_val) {
-    if (target_val >= from && target_val < to)
-	return 1;
-
-    return 0;
-}
-
 int getPfmiPartialFileCol(Pfmi *pfmi, float *buf, int col_idx) {
     PfmiPartialFileImplData *pfmi_data;
 
     pfmi_data = (PfmiPartialFileImplData *)pfmi->impl_data;
 
-    if (inRange(pfmi_data->start_col, pfmi_data->end_col, col_idx)) {
+    if (inNumRange(pfmi_data->start_col, pfmi_data->end_col, col_idx)) {
 	return pfmi_data->file_impl->get_col_func(pfmi_data->file_impl, buf,
 						  col_idx - pfmi_data->start_col);
     } else {
@@ -57,7 +51,7 @@ int storePfmiPartialFileCol(Pfmi *pfmi, const float *col, int col_idx) {
     PfmiPartialFileImplData *pfmi_data;
 
     pfmi_data = (PfmiPartialFileImplData *)pfmi->impl_data;
-    if (inRange(pfmi_data->start_col, pfmi_data->end_col, col_idx)) {
+    if (inNumRange(pfmi_data->start_col, pfmi_data->end_col, col_idx)) {
 	return pfmi_data->file_impl->store_col_func(pfmi_data->file_impl, col,
 						    col_idx - pfmi_data->start_col);
     } else {
