@@ -65,10 +65,10 @@ test-run : test-target | test-clean
 valgrind-test-run : test-target | test-clean
 	$(LAUNCH_OPTS) $(VALGRIND) $(VALGRIND_OPTS) ./$(BIN_TEST_TARGET)
 
-clean:
+clean : | test-clean
 	rm -rvf $(BIN_DIR) valgrind.log.*
 
-check-syntax:
+check-syntax :
 	$(CC) $(C_OPTS) -o /dev/null -S ${CHK_SOURCES}
 
-.PHONY: check-syntax clean run target test-target test-run valgrind-test-run test-clean
+.PHONY : check-syntax clean run target test-target test-run valgrind-test-run test-clean
