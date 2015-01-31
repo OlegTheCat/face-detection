@@ -19,3 +19,8 @@ int inNumRange(int from, int to, int target_val) {
 
     return 0;
 }
+
+int rangeSize(Range *r) {
+    return r->to - r->from;
+}
+

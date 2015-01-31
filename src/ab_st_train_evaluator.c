@@ -67,11 +67,37 @@ float calcWeightedError(const Label *res_labels,
 }
 
 
+void getBestStump(Rds *stumps,
+		  int stumps_num,
+		  DataSet *ds,
+		  float *weights,
+		  Label *res_labels,
+		  Rds *best_stump,
+		  float *min_wg_error) {
+    int i;
+    float wg_error;
+
+    *min_wg_error = FLT_MAX;
+
+    for (i = 0; i < stumps_num; i++) {
+	classifyDataWithRds(&stumps[i], ds->data, res_labels);
+	wg_error = calcWeightedError(res_labels,
+				     ds->labels,
+				     weights,
+				     getExamplesNum(ds));
+	assert(!isnan(wg_error));
+	if (wg_error < *min_wg_error) {
+	    *min_wg_error = wg_error;
+	    *best_stump = stumps[i];
+	}
+    }
+}
+
 
 void trainWeak(AdaBoost *ab, DataSet *ds, float *weights) {
     Wrds wrds;
     Rds *stumps, best_stump;
-    float wg_error, min_wg_error, beta, alpha;
+    float min_wg_error, beta, alpha;
     Label *res_labels;
     int i;
 
@@ -82,19 +108,8 @@ void trainWeak(AdaBoost *ab, DataSet *ds, float *weights) {
     }
 
     res_labels = malloc(sizeof(float) * getExamplesNum(ds));
-    min_wg_error = FLT_MAX;
-    for (i = 0; i < getFeaturesNum(ds); i++) {
-	classifyDataWithRds(&stumps[i], ds->data, res_labels);
-	wg_error = calcWeightedError(res_labels,
-				     ds->labels,
-				     weights,
-				     getExamplesNum(ds));
-	assert(!isnan(wg_error));
-	if (wg_error < min_wg_error) {
-	    min_wg_error = wg_error;
-	    best_stump = stumps[i];
-	}
-    }
+
+    getBestStump(stumps, getFeaturesNum(ds), ds, weights, res_labels, &best_stump, &min_wg_error);
 
     beta = min_wg_error / (1 - min_wg_error);
     alpha = logf(1 / beta);
@@ -141,7 +156,6 @@ void trainAdaBoostSingleThreaded(void *data,
     }
 
     free(weights);
-
 }
 
 TrainEvaluator *createAbStTrainEvaluator() {
