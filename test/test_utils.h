@@ -17,3 +17,16 @@
 
 char *getTestFileName(char *result);
 char *getUniqueFileName(const char *prefix, const char *suffix, char *result);
+
+struct PersistentFloatMatrix;
+enum Label;
+
+void fillPfmWithRandomData(struct PersistentFloatMatrix *pfm);
+enum Label *getRandomLabels(int num_examples,
+			    int *num_pos_examples,
+			    int *num_neg_examples);
+
+float randomFloat();
+int misclassifiedExamplesNum(const enum Label *res_labels,
+			     const enum Label *labels,
+			     int num_examples);
