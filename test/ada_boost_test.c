@@ -47,7 +47,7 @@ const char *testTrainAdaBoost1() {
     AdaBoost *ab;
     DataSet *ds;
 
-    ds = getRandomDataSet(50, 50);
+    ds = getRandomDataSet(50, 100);
     ab = createAdaBoost(3);
 
     trainAdaBoost(ab, ds);

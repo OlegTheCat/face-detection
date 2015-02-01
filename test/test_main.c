@@ -81,6 +81,8 @@ static const char *runAllTests() {
     mu_run_mpi_test(testCreatePfmDistributedFileImpl);
     mu_run_mpi_test(testDistributedPfmGetStoreCol);
     mu_run_mpi_test(testDistributedPfmRemoveRow);
+    mu_run_mpi_test(testStoreAllCols);
+    mu_run_mpi_test(testRandomFill);
 
     mu_run_mpi_test(testCreateDistributedAb);
     mu_run_mpi_test(testTrainDistributedAb);

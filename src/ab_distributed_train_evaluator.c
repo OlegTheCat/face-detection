@@ -13,17 +13,15 @@
 #include "mpi_utils.h"
 
 int rdsDataPackSize(int examples_num) {
-    int pack_size;
+    int int_size;
+    int float_size;
+    int int_arr_size;
 
-    pack_size = 0;
+    MPI_Pack_size(1, MPI_INT, MPI_COMM_WORLD, &int_size);
+    MPI_Pack_size(1, MPI_FLOAT, MPI_COMM_WORLD, &float_size);
+    MPI_Pack_size(examples_num, MPI_INT, MPI_COMM_WORLD, &int_arr_size);
 
-    MPI_Pack_size(1, MPI_INT, MPI_COMM_WORLD, &pack_size);
-    MPI_Pack_size(1, MPI_FLOAT, MPI_COMM_WORLD, &pack_size);
-    MPI_Pack_size(1, MPI_FLOAT, MPI_COMM_WORLD, &pack_size);
-    MPI_Pack_size(1, MPI_FLOAT, MPI_COMM_WORLD, &pack_size);
-    MPI_Pack_size(examples_num, MPI_INT, MPI_COMM_WORLD, &pack_size);
-
-    return pack_size;
+    return int_size + float_size * 3 + int_arr_size;
 }
 
 void packRdsData(Rds *rds,
@@ -66,6 +64,7 @@ void trainWeakDistributed(AdaBoost *ab, DataSet *ds, float *weights,
 
     col_range = getIdxRangeForProcess(getFeaturesNum(ds), comm_rank, comm_size);
     stumps = malloc(sizeof(Rds) * rangeSize(&col_range));
+    /* proc_printf(">>> range size = %d\n\n", rangeSize(&col_range)); */
 
     for (i = 0, feature_idx = col_range.from; feature_idx < col_range.to; i++, feature_idx++) {
 	stumps[i] = createRds(feature_idx);
@@ -81,6 +80,7 @@ void trainWeakDistributed(AdaBoost *ab, DataSet *ds, float *weights,
     pack_size = rdsDataPackSize(getExamplesNum(ds));
     send_buf = malloc(pack_size);
     recv_buf = malloc(pack_size * comm_size);
+
     position = 0;
     packRdsData(&best_stump, res_labels, getExamplesNum(ds), send_buf, pack_size, &position);
 
@@ -140,7 +140,6 @@ void trainAdaBoostDistributed(void *data,
 
     weights = malloc(sizeof(float) * getExamplesNum(ds));
     initWeights(weights, ds);
-
     for (t = 0; t < ab->max_stumps; t++) {
 	normalizeWeigths(weights, getExamplesNum(ds));
 	trainWeakDistributed(ab, ds, weights, comm_rank, comm_size);

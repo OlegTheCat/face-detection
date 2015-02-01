@@ -1,4 +1,3 @@
-# include Makefile.opencl
 include Makefile.mpi
 
 CC ?= gcc

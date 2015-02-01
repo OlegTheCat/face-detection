@@ -83,8 +83,8 @@ PfmiDistributedFileImplData *createDistributedPfmiData(const char *storage_path,
 }
 
 Pfmi *createPfmDistributedFileImpl(const char *storage_path,
-				   int cols,
-				   int rows) {
+				   int rows,
+				   int cols) {
     int comm_size, comm_rank;
     char proc_storage_path[350];
     Pfmi *pfmi;

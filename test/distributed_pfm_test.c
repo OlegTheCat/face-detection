@@ -15,8 +15,8 @@ Pfmi *getDistributedFilePfmi(const char *file_name, int rows, int cols) {
     Pfmi *pfmi;
 
     pfmi = createPfmDistributedFileImpl(file_name,
-					cols,
-					rows);
+					rows,
+					cols);
 
     return pfmi;
 }
@@ -79,6 +79,61 @@ const char *testDistributedPfmGetStoreCol() {
 
     err = getPfmCol(pfm, col, col_range.to);
     mu_assert("Wrong get #2 error code", err == PFMI_OUT_OF_COL_RANGE);
+
+    deletePfm(pfm);
+
+    return 0;
+}
+
+const char *testStoreAllCols() {
+    PersistentFloatMatrix *pfm;
+    const int rows = 10, cols = 20;
+    float col[rows];
+    int i, comm_size, comm_rank;
+    int err;
+    Range col_range;
+
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &comm_rank);
+
+    col_range = getIdxRangeForProcess(cols, comm_rank, comm_size);
+
+    WITH_TEST_FILE_NAME
+	(pfm = createPfmWithImpl(FILE_NAME_HANDLE,
+				 rows, cols,
+				 getDistributedFilePfmi(FILE_NAME_HANDLE,
+							rows, cols)));
+
+    for (i = 0; i < rows; i++) {
+	col[i] = (float)i;
+    }
+
+
+    for (i = 0; i < cols; i++) {
+	err = storePfmCol(pfm, col, i);
+
+	if (inRange(&col_range, i)) {
+	    mu_assert("Failed store within col_range", err == 0);
+	} else {
+	    mu_assert("Successful store out of col_range", err == PFMI_OUT_OF_COL_RANGE);
+	}
+    }
+
+    deletePfm(pfm);
+    return 0;
+}
+
+const char *testRandomFill() {
+    PersistentFloatMatrix *pfm;
+    const int rows = 50, cols = 100;
+
+    WITH_TEST_FILE_NAME
+	(pfm = createPfmWithImpl(FILE_NAME_HANDLE,
+				 rows, cols,
+				 getDistributedFilePfmi(FILE_NAME_HANDLE,
+							rows, cols)));
+
+    fillPfmWithRandomData(pfm);
 
     deletePfm(pfm);
 
