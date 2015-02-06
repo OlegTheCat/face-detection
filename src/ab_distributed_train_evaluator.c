@@ -21,15 +21,17 @@ int rdsDataPackSize(int examples_num) {
     MPI_Pack_size(1, MPI_FLOAT, MPI_COMM_WORLD, &float_size);
     MPI_Pack_size(examples_num, MPI_INT, MPI_COMM_WORLD, &int_arr_size);
 
-    return int_size + float_size * 3 + int_arr_size;
+    return int_size + float_size * 4 + int_arr_size;
 }
 
 void packRdsData(Rds *rds,
 		 Label *res_labels,
 		 int examples_num,
+		 float wg_error,
 		 char *out_buf,
 		 int buf_size,
 		 int *position) {
+    MPI_Pack(&wg_error, 1, MPI_FLOAT, out_buf, buf_size, position, MPI_COMM_WORLD);
     MPI_Pack(&rds->feature_idx, 1, MPI_INT, out_buf, buf_size, position, MPI_COMM_WORLD);
     MPI_Pack(&rds->left_val, 1, MPI_FLOAT, out_buf, buf_size, position, MPI_COMM_WORLD);
     MPI_Pack(&rds->right_val, 1, MPI_FLOAT, out_buf, buf_size, position, MPI_COMM_WORLD);
@@ -40,14 +42,38 @@ void packRdsData(Rds *rds,
 void unpackRdsData(Rds *rds,
 		   Label *res_labels,
 		   int examples_num,
+		   float *wg_error,
 		   char *in_buf,
 		   int in_size,
 		   int *position) {
+    MPI_Unpack(in_buf, in_size, position, wg_error, 1, MPI_FLOAT, MPI_COMM_WORLD);
     MPI_Unpack(in_buf, in_size, position, &rds->feature_idx, 1, MPI_INT, MPI_COMM_WORLD);
     MPI_Unpack(in_buf, in_size, position, &rds->left_val, 1, MPI_FLOAT, MPI_COMM_WORLD);
     MPI_Unpack(in_buf, in_size, position, &rds->right_val, 1, MPI_FLOAT, MPI_COMM_WORLD);
     MPI_Unpack(in_buf, in_size, position, &rds->threshold, 1, MPI_FLOAT, MPI_COMM_WORLD);
     MPI_Unpack(in_buf, in_size, position, res_labels, examples_num, MPI_INT, MPI_COMM_WORLD);
+}
+
+void unpackRdsDataIfBetter(Rds *rds,
+			   Label *res_labels,
+			   int examples_num,
+			   float *wg_error,
+			   char *in_buf,
+			   int in_size,
+			   int *position) {
+    int local_position;
+    float local_wg_error;
+
+    local_position = *position;
+    MPI_Unpack(in_buf, in_size, &local_position, &local_wg_error, 1, MPI_FLOAT, MPI_COMM_WORLD);
+
+    if (local_wg_error < *wg_error) {
+	unpackRdsData(rds, res_labels, examples_num, wg_error, in_buf, in_size, position);
+    } else {
+	// FIXME: Probably that's not correct
+	// due to rdsDataPackSize returns upper bound of packet size
+	*position += rdsDataPackSize(examples_num);
+    }
 }
 
 void trainWeakDistributed(AdaBoost *ab, DataSet *ds, float *weights,
@@ -60,7 +86,6 @@ void trainWeakDistributed(AdaBoost *ab, DataSet *ds, float *weights,
     Range col_range;
     char *send_buf;
     char *recv_buf;
-    Rds *proc_best_stumps;
 
     col_range = getIdxRangeForProcess(getFeaturesNum(ds), comm_rank, comm_size);
     stumps = malloc(sizeof(Rds) * rangeSize(&col_range));
@@ -82,30 +107,28 @@ void trainWeakDistributed(AdaBoost *ab, DataSet *ds, float *weights,
     recv_buf = malloc(pack_size * comm_size);
 
     position = 0;
-    packRdsData(&best_stump, res_labels, getExamplesNum(ds), send_buf, pack_size, &position);
+    packRdsData(&best_stump, res_labels, getExamplesNum(ds), min_wg_error, send_buf, pack_size, &position);
 
     MPI_Allgather(send_buf, position, MPI_PACKED,
 		  recv_buf, position, MPI_PACKED, MPI_COMM_WORLD);
 
 
-    proc_best_stumps = malloc(sizeof(Rds) * comm_size);
-
     position = 0;
-    for (i = 0; i < comm_size; i++) {
-	unpackRdsData(proc_best_stumps,
-		      res_labels,
-		      getExamplesNum(ds),
-		      recv_buf,
-		      pack_size * comm_size,
-		      &position);
-    }
 
-    getBestStump(proc_best_stumps, comm_size, ds, weights, res_labels, &best_stump, &min_wg_error);
+    min_wg_error = FLT_MAX;
+
+    for (i = 0; i < comm_size; i++) {
+	unpackRdsDataIfBetter(&best_stump,
+			      res_labels,
+			      getExamplesNum(ds),
+			      &min_wg_error,
+			      recv_buf,
+			      pack_size * comm_size,
+			      &position);
+    }
 
     beta = min_wg_error / (1 - min_wg_error);
     alpha = logf(1 / beta);
-
-    classifyDataWithRds(&best_stump, ds->data, res_labels);
 
     updateWeigths(res_labels,
 		  ds->labels,
@@ -119,6 +142,9 @@ void trainWeakDistributed(AdaBoost *ab, DataSet *ds, float *weights,
     addToArrayList(&ab->weighted_stumps, &wrds);
 
     ab->threshold += 0.5 * alpha;
+
+    free(send_buf);
+    free(recv_buf);
     free(res_labels);
     free(stumps);
 }
