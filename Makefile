@@ -64,6 +64,23 @@ test-run : test-target | test-clean
 valgrind-test-run : test-target | test-clean
 	$(LAUNCH_OPTS) $(VALGRIND) $(VALGRIND_OPTS) ./$(BIN_TEST_TARGET)
 
+BENCH_DIR := bench/
+BENCH_SOURCES := $(wildcard $(BENCH_DIR)*.c)
+BENCH_OBJS := $(patsubst $(BENCH_DIR)%.c, $(BIN_DIR)%.o, $(BENCH_SOURCES))
+BENCH_TARGET := bench
+BIN_BENCH_TARGET := $(BIN_DIR)$(BENCH_TARGET)
+
+$(BIN_DIR)%.o : $(BENCH_DIR)%.c
+	$(CC) -c $< $(C_OPTS) -I$(SRC_DIR) -o $@
+
+$(BIN_BENCH_TARGET) : $(BIN_TARGET) $(BENCH_OBJS)
+	$(CC) $(BENCH_OBJS) $(BIN_TARGET) $(LD_OPTS) -o $@
+
+bench-target : $(BIN_BENCH_TARGET)
+
+bench-run : bench-target
+	$(LAUNCH_OPTS) ./$(BIN_BENCH_TARGET)
+
 clean : | test-clean
 	rm -rvf $(BIN_DIR) valgrind.log.*
 
