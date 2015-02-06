@@ -22,6 +22,7 @@ struct PersistentFloatMatrix;
 enum Label;
 
 void fillPfmWithRandomData(struct PersistentFloatMatrix *pfm);
+struct DataSet *getRandomDataSet(int num_examples, int num_features);
 enum Label *getRandomLabels(int num_examples,
 			    int *num_pos_examples,
 			    int *num_neg_examples);

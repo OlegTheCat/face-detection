@@ -2,13 +2,14 @@
 
 #include <time.h>
 #include <float.h>
+#include <stdio.h>
 
 float startBenchmark() {
-    return (float)clock()/CLOCKS_PER_SEC;
+    return (float)clock() / CLOCKS_PER_SEC;
 }
 
 float endBenchmark() {
-    return (float)clock()/CLOCKS_PER_SEC;
+    return (float)clock() / CLOCKS_PER_SEC;
 }
 
 float getTime(float start, float end) {
@@ -40,3 +41,8 @@ float performBenchmarkTimes(BenchmarkFunc fn, int times) {
 
     return min_time;
 }
+
+void reportElapsedTime(const char *bench_name, float time) {
+    printf("Benchmark %s lasted %f seconds\n\n", bench_name, time);
+}
+

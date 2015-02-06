@@ -10,28 +10,6 @@
 #include "data_set.h"
 #include "persistent_float_matrix.h"
 
-static Pfm *getRandomData(int rows, int cols) {
-    Pfm *data;
-
-    WITH_TEST_FILE_NAME(data = createPfm(FILE_NAME_HANDLE, rows, cols));
-
-    fillPfmWithRandomData(data);
-    return data;
-}
-
-
-static DataSet *getRandomDataSet(int num_examples, int num_features) {
-    DataSet *ds;
-
-    ds = malloc(sizeof(DataSet));
-    ds->data = getRandomData(num_examples, num_features);
-    ds->labels = getRandomLabels(num_examples,
-				 &(ds->pos_examples_num),
-				 &(ds->neg_examples_num));
-
-    return ds;
-}
-
 const char *testCreateAdaBoost() {
     AdaBoost *ab;
 
