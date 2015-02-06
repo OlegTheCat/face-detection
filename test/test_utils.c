@@ -5,6 +5,7 @@
 
 #include "persistent_float_matrix.h"
 #include "data_set.h"
+#include "pfm_distributed_file_impl.h"
 
 int getUniqueFileIndex() {
     static int i = 0;
@@ -100,3 +101,21 @@ DataSet *getRandomDataSet(int num_examples, int num_features) {
     return ds;
 }
 
+DataSet *getDistributedRandomDataSet(int num_examples, int num_features) {
+    DataSet *ds;
+
+    ds = malloc(sizeof(DataSet));
+    WITH_TEST_FILE_NAME
+	(ds->data = createPfmWithImpl(FILE_NAME_HANDLE,
+				      num_examples, num_features,
+				      createPfmDistributedFileImpl(FILE_NAME_HANDLE,
+								   num_examples, num_features)));
+
+    fillPfmWithRandomData(ds->data);
+    ds->labels = getRandomLabels(num_examples,
+				 &(ds->pos_examples_num),
+				 &(ds->neg_examples_num));
+
+
+    return ds;
+}

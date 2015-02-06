@@ -9,6 +9,7 @@
 #define GET_TIME(num) \
     getTime(__start_time ## num, __end_time ## num)
 
+
 typedef void (*BenchmarkFunc)();
 
 float startBenchmark();
@@ -19,3 +20,5 @@ float performBenchmark(BenchmarkFunc fn);
 float performBenchmarkTimes(BenchmarkFunc fn, int times);
 
 void reportElapsedTime(const char *bench_name, float time);
+void procReportElapsedTime(const char *bench_name, float time);
+void rootReportElapsedTime(const char *bench_name, float time);

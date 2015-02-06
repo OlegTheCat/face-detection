@@ -17,6 +17,8 @@ void runBenchs() {
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
+
+    performDistributedAdaBoostBenchs();
 }
 
 int main() {

@@ -12,25 +12,6 @@
 #include "pfm_distributed_file_impl.h"
 #include "evaluators.h"
 
-DataSet *getDistributedRandomDataSet(int num_examples, int num_features) {
-    DataSet *ds;
-
-    ds = malloc(sizeof(DataSet));
-    WITH_TEST_FILE_NAME
-	(ds->data = createPfmWithImpl(FILE_NAME_HANDLE,
-				      num_examples, num_features,
-				      createPfmDistributedFileImpl(FILE_NAME_HANDLE,
-								   num_examples, num_features)));
-
-    fillPfmWithRandomData(ds->data);
-    ds->labels = getRandomLabels(num_examples,
-				 &(ds->pos_examples_num),
-				 &(ds->neg_examples_num));
-
-
-    return ds;
-}
-
 const char *testCreateDistributedAb() {
     AdaBoost *ab;
     TrainEvaluator *te;

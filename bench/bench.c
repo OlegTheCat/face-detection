@@ -3,6 +3,9 @@
 #include <time.h>
 #include <float.h>
 #include <stdio.h>
+#include <mpi.h>
+
+#include "mpi_utils.h"
 
 float startBenchmark() {
     return (float)clock() / CLOCKS_PER_SEC;
@@ -44,5 +47,13 @@ float performBenchmarkTimes(BenchmarkFunc fn, int times) {
 
 void reportElapsedTime(const char *bench_name, float time) {
     printf("Benchmark %s lasted %f seconds\n\n", bench_name, time);
+}
+
+void procReportElapsedTime(const char *bench_name, float time) {
+    proc_printf("Benchmark %s lasted %f seconds\n\n", bench_name, time);
+}
+
+void rootReportElapsedTime(const char *bench_name, float time) {
+    root_printf("Benchmark %s lasted %f seconds\n\n", bench_name, time);
 }
 
