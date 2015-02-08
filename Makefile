@@ -7,7 +7,7 @@ VALGRIND_OPTS += --tool=memcheck --leak-check=full --trace-children=yes --log-fi
 
 C_OPTS += -Wall -Wextra -Werror -std=c99 $(INCLUDE_DIRS:%=-I%)
 ifdef RELEASE
-C_OPTS += -O3 -DNDEBUG
+C_OPTS += -O3 -DNDEBUG -Wno-error=unused-result
 else
 C_OPTS += -g3 -O0
 endif
