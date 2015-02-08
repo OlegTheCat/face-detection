@@ -27,3 +27,22 @@ int fileExists(const char *path) {
     return exists;
 }
 
+void freeNonNull(void *ptr) {
+    if (ptr != NULL) {
+	free(ptr);
+    }
+}
+
+void *safeMalloc(size_t size, const char *file, int line) {
+    void *p;
+
+    p = malloc(size);
+
+    if (p == NULL) {
+	fprintf(stderr, "%s:%d: Out of memory error\n",
+		file, line);
+	exit(EXIT_FAILURE);
+    }
+
+    return p;
+}

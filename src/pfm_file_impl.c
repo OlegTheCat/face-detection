@@ -3,14 +3,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "utils.h"
 #include "array_list.h"
 #include "persistent_float_matrix.h"
+#include "range.h"
+
+#define CACHE_HIT 0
+#define CACHE_MISS 1
 
 struct PfmiFileImplData {
     FILE *file;
     float *col_buf;
+
+    size_t col_size;
+
+    float *cols_cache;
+    int cache_cols_num;
+    Range cols_in_cache;
+    int last_read_col_idx;
+
+    int cols;
+
     int initial_rows_num;
     // This should be replaced by hash set in future
     ArrayList removed_rows;
@@ -18,7 +33,10 @@ struct PfmiFileImplData {
 
 typedef struct PfmiFileImplData PfmiFileImplData;
 
-PfmiFileImplData *createImplData(const char *storage_path, int rows, int cols) {
+PfmiFileImplData *createImplData(const char *storage_path,
+				 int rows,
+				 int cols,
+				 int cache_cols_num) {
     PfmiFileImplData *pfmi_data;
     FILE *f;
     float *zero_col;
@@ -57,14 +75,24 @@ PfmiFileImplData *createImplData(const char *storage_path, int rows, int cols) {
     pfmi_data->file = f;
     pfmi_data->removed_rows = createArrayList(sizeof(int));
     pfmi_data->initial_rows_num = rows;
-    pfmi_data->col_buf = malloc(sizeof(float) * rows);
+    pfmi_data->cols = cols;
+    pfmi_data->col_size = sizeof(float) * rows;
 
+    pfmi_data->col_buf = malloc(pfmi_data->col_size);
+    pfmi_data->cache_cols_num = cache_cols_num;
+    pfmi_data->cols_cache = SAFE_MALLOC(pfmi_data->col_size * cache_cols_num);
+    /* printf("Allocated cache from %ld to %ld\n\n", */
+    /* 	   (long)pfmi_data->cols_cache, */
+    /* 	   ((long)pfmi_data->cols_cache + (long)(pfmi_data->col_size * cache_cols_num))); */
+    pfmi_data->last_read_col_idx = -1;
+    memset(pfmi_data->cols_cache, 0, (pfmi_data->col_size * cache_cols_num));
+    pfmi_data->cols_in_cache = createRange(0, cache_cols_num);
     return pfmi_data;
 }
 
 void seekToCol(PfmiFileImplData *pfmi_data, int col_idx) {
     fseek(pfmi_data->file,
-	  pfmi_data->initial_rows_num * col_idx * sizeof(float),
+	  pfmi_data->col_size * col_idx,
 	  SEEK_SET);
 }
 
@@ -74,6 +102,85 @@ void readPfmiBuffer(PfmiFileImplData *pfmi_data) {
 
 void writePfmiBuffer(PfmiFileImplData *pfmi_data) {
     fwrite(pfmi_data->col_buf, sizeof(float), pfmi_data->initial_rows_num, pfmi_data->file);
+}
+
+void populateCacheWithRange(PfmiFileImplData *pfmi_data) {
+
+    /* printf("populating cache with range: %d , %d\n\n", pfmi_data->cols_in_cache.from, */
+    /* 	   pfmi_data->cols_in_cache.to); */
+    seekToCol(pfmi_data, pfmi_data->cols_in_cache.from);
+    fread(pfmi_data->cols_cache, sizeof(float),
+	  pfmi_data->initial_rows_num * rangeSize(&pfmi_data->cols_in_cache),
+	  pfmi_data->file);
+}
+
+void populateCache(PfmiFileImplData *pfmi_data, int start_col_idx) {
+    int finish_col;
+
+    finish_col =
+	(start_col_idx + pfmi_data->cache_cols_num > pfmi_data->cols) ?
+	pfmi_data->cols :
+	start_col_idx + pfmi_data->cache_cols_num;
+
+    pfmi_data->cols_in_cache = createRange(start_col_idx, finish_col);
+
+    populateCacheWithRange(pfmi_data);
+}
+
+void cacheNextColsHunk(PfmiFileImplData *pfmi_data) {
+    populateCache(pfmi_data,
+		  (pfmi_data->cols_in_cache.to == pfmi_data->cols)
+		  ? 0
+		  : pfmi_data->cols_in_cache.to);
+}
+
+void writeBufToCache(PfmiFileImplData *pfmi_data, int col_idx) {
+    if (inRange(&pfmi_data->cols_in_cache, col_idx)) {
+	/* printf("col_idx %d is in range [%d;%d]\n\n", col_idx, pfmi_data->cols_in_cache.from, */
+	/*        pfmi_data->cols_in_cache.to); */
+	/* printf("Trying to write data in range %ld : %ld \n\n", */
+	/*        (long)pfmi_data->cols_cache + (long)((col_idx - pfmi_data->cols_in_cache.from) * pfmi_data->col_size), */
+	/*        (long)pfmi_data->cols_cache + (long)((col_idx - pfmi_data->cols_in_cache.from) * pfmi_data->col_size + pfmi_data->col_size)); */
+	/* fflush(stdout); */
+	memcpy(pfmi_data->cols_cache +
+	       (col_idx - pfmi_data->cols_in_cache.from) * pfmi_data->initial_rows_num,
+	       pfmi_data->col_buf,
+	       pfmi_data->col_size);
+    }
+}
+
+int readBufFromCache(PfmiFileImplData *pfmi_data, int col_idx) {
+    if (pfmi_data->cache_cols_num == 0) {
+	return CACHE_MISS;
+    } else if (inRange(&pfmi_data->cols_in_cache, col_idx)) {
+	memcpy(pfmi_data->col_buf,
+	       pfmi_data->cols_cache +
+	       (col_idx - pfmi_data->cols_in_cache.from) * pfmi_data->initial_rows_num,
+	       pfmi_data->col_size);
+	return CACHE_HIT;
+    } else if (col_idx == pfmi_data->cols_in_cache.to &&
+	       col_idx == pfmi_data->last_read_col_idx + 1) {
+	cacheNextColsHunk(pfmi_data);
+	return readBufFromCache(pfmi_data, col_idx);
+    }
+
+    return CACHE_MISS;
+}
+
+void cachedRead(PfmiFileImplData *pfmi_data, int col_idx) {
+
+    if (readBufFromCache(pfmi_data, col_idx) == CACHE_HIT) return;
+
+    seekToCol(pfmi_data, col_idx);
+    readPfmiBuffer(pfmi_data);
+
+    pfmi_data->last_read_col_idx = col_idx;
+}
+
+void cachedWrite(PfmiFileImplData *pfmi_data, int col_idx) {
+    writeBufToCache(pfmi_data, col_idx);
+    seekToCol(pfmi_data, col_idx);
+    writePfmiBuffer(pfmi_data);
 }
 
 int getIntFromArrayList(const ArrayList *al, int idx) {
@@ -115,9 +222,9 @@ int getPfmiFileCol(Pfmi *pfmi, float *buf, int col_idx) {
 
     pfmi_data = (PfmiFileImplData *)pfmi->impl_data;
     f = pfmi_data->file;
-    seekToCol(pfmi_data, col_idx);
-    readPfmiBuffer(pfmi_data);
     if (ferror(f)) return 1;
+
+    cachedRead(pfmi_data, col_idx);
 
     filterPfmCol(pfmi_data->col_buf,
 		 buf,
@@ -157,8 +264,7 @@ int storePfmiFileCol(Pfmi *pfmi, const float *col, int col_idx) {
 		 pfmi_data->col_buf,
 		 &pfmi_data->removed_rows,
 		 pfmi_data->initial_rows_num);
-    seekToCol(pfmi_data, col_idx);
-    writePfmiBuffer(pfmi_data);
+    cachedWrite(pfmi_data, col_idx);
     if (ferror(f)) return 1;
     rewind(f);
 
@@ -196,6 +302,7 @@ void deletePfmiFile(Pfmi *pfmi) {
 	if (pfmi_data != NULL) {
 	    fclose(pfmi_data->file);
 	    deleteArrayList(&pfmi_data->removed_rows);
+	    free(pfmi_data->cols_cache);
 	    free(pfmi_data->col_buf);
 	    free(pfmi_data);
 	}
@@ -203,11 +310,23 @@ void deletePfmiFile(Pfmi *pfmi) {
     }
 }
 
-Pfmi *createPfmFileImpl(const char *storage_path, int rows, int cols) {
+Pfmi *createPfmFileImpl(const char *storage_path,
+			int rows,
+			int cols) {
+    return createBufferedPfmFileImpl(storage_path,
+				     rows,
+				     cols,
+				     cols / 4);
+}
+
+Pfmi *createBufferedPfmFileImpl(const char *storage_path,
+				int rows,
+				int cols,
+				int preload_cols_num) {
     Pfmi *pfmi;
     void *data;
 
-    data = createImplData(storage_path, rows, cols);
+    data = createImplData(storage_path, rows, cols, preload_cols_num);
     if (data == NULL) return NULL;
 
     pfmi = malloc(sizeof(Pfmi));

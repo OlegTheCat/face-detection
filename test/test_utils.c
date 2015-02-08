@@ -65,6 +65,11 @@ float randomFloat() {
     return ((float)rand() / RAND_MAX) * rand();
 }
 
+int randomInt(int max) {
+    return rand() % max;
+}
+
+
 int misclassifiedExamplesNum(const Label *res_labels,
 			     const Label *labels,
 			     int num_examples) {
