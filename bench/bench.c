@@ -1,5 +1,7 @@
 #include "bench.h"
 
+#include <sys/time.h>
+
 #include <time.h>
 #include <float.h>
 #include <stdio.h>
@@ -7,20 +9,31 @@
 
 #include "mpi_utils.h"
 
-float startBenchmark() {
-    return (float)clock() / CLOCKS_PER_SEC;
+/* double getCurrentTime() { */
+/*     return (double)clock() / CLOCKS_PER_SEC; */
+/* } */
+
+double getCurrentTime() {
+    struct timeval tim;
+    gettimeofday(&tim, NULL);
+
+    return tim.tv_sec + (tim.tv_usec / 1000000.0);
 }
 
-float endBenchmark() {
-    return (float)clock() / CLOCKS_PER_SEC;
+double startBenchmark() {
+    return getCurrentTime();
 }
 
-float getTime(float start, float end) {
+double endBenchmark() {
+    return getCurrentTime();
+}
+
+double getTime(double start, double end) {
     return end - start;
 }
 
-float performBenchmark(BenchmarkFunc fn) {
-    float start, end;
+double performBenchmark(BenchmarkFunc fn) {
+    double start, end;
 
     start = startBenchmark();
     fn();
@@ -29,9 +42,9 @@ float performBenchmark(BenchmarkFunc fn) {
     return getTime(end, start);
 }
 
-float performBenchmarkTimes(BenchmarkFunc fn, int times) {
+double performBenchmarkTimes(BenchmarkFunc fn, int times) {
     int i;
-    float min_time, time;
+    double min_time, time;
 
     min_time = FLT_MAX;
     for (i = 0; i < times; i++) {
@@ -45,15 +58,14 @@ float performBenchmarkTimes(BenchmarkFunc fn, int times) {
     return min_time;
 }
 
-void reportElapsedTime(const char *bench_name, float time) {
+void reportElapsedTime(const char *bench_name, double time) {
     printf("Benchmark '%s' lasted %f seconds\n\n", bench_name, time);
 }
 
-void procReportElapsedTime(const char *bench_name, float time) {
+void procReportElapsedTime(const char *bench_name, double time) {
     proc_printf("Benchmark '%s' lasted %f seconds\n\n", bench_name, time);
 }
 
-void rootReportElapsedTime(const char *bench_name, float time) {
+void rootReportElapsedTime(const char *bench_name, double time) {
     root_printf("Benchmark '%s' lasted %f seconds\n\n", bench_name, time);
 }
-
