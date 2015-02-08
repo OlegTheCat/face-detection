@@ -29,6 +29,7 @@ enum Label *getRandomLabels(int num_examples,
 			    int *num_neg_examples);
 
 float randomFloat();
+int randomInt(int max);
 int misclassifiedExamplesNum(const enum Label *res_labels,
 			     const enum Label *labels,
 			     int num_examples);
