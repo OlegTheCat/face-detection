@@ -8,77 +8,58 @@
 #include "test_utils.h"
 #include "mpi_utils.h"
 
-void performAdaBoostBenchs() {
-    DataSet *ds100x100, *ds200x200, *ds200x300, *ds500x500;
-    AdaBoost *ab1, *ab2, *ab3, *ab4;
+void benchAdaBoost(const char *bench_name,
+		   int num_examples,
+		   int num_features,
+		   int num_weaks) {
+    DataSet *ds;
+    AdaBoost *ab;
 
-    ds100x100 = getRandomDataSet(100, 100);
-    ds200x200 = getRandomDataSet(200, 200);
-    ds200x300 = getRandomDataSet(200, 300);
-    ds500x500 = getRandomDataSet(500, 500);
-
-    ab1 = createAdaBoost(50);
-    ab2 = createAdaBoost(50);
-    ab3 = createAdaBoost(50);
-    ab4 = createAdaBoost(50);
+    ds = getRandomDataSet(num_examples, num_features);
+    ab = createAdaBoost(num_weaks);
 
     START_BENCHMARK(0);
-    trainAdaBoost(ab1, ds100x100);
+    trainAdaBoost(ab, ds);
     END_BENCHMARK(0);
-    reportElapsedTime("AB 100x100 train", GET_TIME(0));
+    reportElapsedTime(bench_name, GET_TIME(0));
 
-    START_BENCHMARK(1);
-    trainAdaBoost(ab2, ds200x200);
-    END_BENCHMARK(1);
-    reportElapsedTime("AB ds200x200 train", GET_TIME(1));
+    deleteAdaBoost(ab);
+    deleteDataSet(ds);
+}
 
-    START_BENCHMARK(2);
-    trainAdaBoost(ab3, ds200x300);
-    END_BENCHMARK(2);
-    reportElapsedTime("AB 200x300 train", GET_TIME(2));
+void benchDistributedAdaBoost(const char *bench_name,
+			      int num_examples,
+			      int num_features,
+			      int num_weaks) {
+    DataSet *ds;
+    AdaBoost *ab;
+    TrainEvaluator *te;
 
-    START_BENCHMARK(3);
-    trainAdaBoost(ab4, ds500x500);
-    END_BENCHMARK(3);
-    reportElapsedTime("AB 500x500 train", GET_TIME(3));
+    ds = getDistributedRandomDataSet(num_examples, num_features);
+    te = createAbDistributedTrainEvaluator();
+    ab = createAdaBoostWithEvaluators(num_weaks, te, NULL);
+
+    START_BENCHMARK(0);
+    trainAdaBoost(ab, ds);
+    END_BENCHMARK(0);
+    rootReportElapsedTime(bench_name, GET_TIME(0));
+
+    deleteAdaBoost(ab);
+    deleteDataSet(ds);
+    free(te);
+}
+
+
+void performAdaBoostBenchs() {
+    benchAdaBoost("AB 100x100 train", 100, 100, 50);
+    benchAdaBoost("AB 200x200 train", 200, 200, 50);
+    benchAdaBoost("AB 300x300 train", 300, 300, 50);
+    benchAdaBoost("AB 500x500 train", 500, 500, 50);
 }
 
 void performDistributedAdaBoostBenchs() {
-    DataSet *ds100x100, *ds200x200, *ds200x300, *ds500x500;
-    AdaBoost *ab1, *ab2, *ab3, *ab4;
-    TrainEvaluator *te1, *te2, *te3, *te4;
-
-    ds100x100 = getDistributedRandomDataSet(100, 100);
-    ds200x200 = getDistributedRandomDataSet(200, 200);
-    ds200x300 = getDistributedRandomDataSet(200, 300);
-    ds500x500 = getDistributedRandomDataSet(500, 500);
-
-    te1  = createAbDistributedTrainEvaluator();
-    te2  = createAbDistributedTrainEvaluator();
-    te3  = createAbDistributedTrainEvaluator();
-    te4  = createAbDistributedTrainEvaluator();
-    ab1  = createAdaBoostWithEvaluators(50, te1 , NULL);
-    ab2  = createAdaBoostWithEvaluators(50, te2 , NULL);
-    ab3  = createAdaBoostWithEvaluators(50, te3 , NULL);
-    ab4  = createAdaBoostWithEvaluators(50, te4 , NULL);
-
-    START_BENCHMARK(0);
-    trainAdaBoost(ab1, ds100x100);
-    END_BENCHMARK(0);
-    rootReportElapsedTime("Distributed AB 100x100 train", GET_TIME(0));
-
-    START_BENCHMARK(1);
-    trainAdaBoost(ab2, ds200x200);
-    END_BENCHMARK(1);
-    rootReportElapsedTime("Distributed AB 200x200 train", GET_TIME(1));
-
-    START_BENCHMARK(2);
-    trainAdaBoost(ab3, ds200x300);
-    END_BENCHMARK(2);
-    rootReportElapsedTime("Distributed AB 200x300 train", GET_TIME(2));
-
-    START_BENCHMARK(3);
-    trainAdaBoost(ab4, ds500x500);
-    END_BENCHMARK(3);
-    rootReportElapsedTime("Distributed AB 500x500 train", GET_TIME(3));
+    benchDistributedAdaBoost("Distributed AB 100x100 train", 100, 100, 50);
+    benchDistributedAdaBoost("Distributed AB 200x200 train", 200, 200, 50);
+    benchDistributedAdaBoost("Distributed AB 300x300 train", 300, 300, 50);
+    benchDistributedAdaBoost("Distributed AB 500x500 train", 500, 500, 50);
 }

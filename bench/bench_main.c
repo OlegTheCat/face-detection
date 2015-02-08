@@ -4,6 +4,7 @@
 #include "impl_config.h"
 
 #include "ab_bench.h"
+#include "pfm_bench.h"
 #include "mpi_utils.h"
 
 void runBenchs() {
@@ -14,6 +15,7 @@ void runBenchs() {
 
     if (PROCESS_IS_ROOT(comm_rank)) {
 	performAdaBoostBenchs();
+	performPfmBenchs();
     }
 
     MPI_Barrier(MPI_COMM_WORLD);

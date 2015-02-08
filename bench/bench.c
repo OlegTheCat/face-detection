@@ -46,14 +46,14 @@ float performBenchmarkTimes(BenchmarkFunc fn, int times) {
 }
 
 void reportElapsedTime(const char *bench_name, float time) {
-    printf("Benchmark %s lasted %f seconds\n\n", bench_name, time);
+    printf("Benchmark '%s' lasted %f seconds\n\n", bench_name, time);
 }
 
 void procReportElapsedTime(const char *bench_name, float time) {
-    proc_printf("Benchmark %s lasted %f seconds\n\n", bench_name, time);
+    proc_printf("Benchmark '%s' lasted %f seconds\n\n", bench_name, time);
 }
 
 void rootReportElapsedTime(const char *bench_name, float time) {
-    root_printf("Benchmark %s lasted %f seconds\n\n", bench_name, time);
+    root_printf("Benchmark '%s' lasted %f seconds\n\n", bench_name, time);
 }
 
