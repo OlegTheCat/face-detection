@@ -3,5 +3,5 @@
 **/.*~
 **/\#*\#
 .fuse_*
-
+valgrind.log.*
 target/

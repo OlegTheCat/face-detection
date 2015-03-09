@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "minunit.h"
+#include "test_utils.h"
 #include "data_set.h"
 #include "constants.h"
 
@@ -47,15 +48,14 @@ const char *testSubSampleImage() {
 
 const char *testCreateDataSet() {
     DataSet *ds;
+    char file_name[350];
 
-    system("rm -f test_data_set*");
-    ds = createDataSet(TEST_POS_LIST, TEST_NEG_LIST, 5, 5, "test_data_set.storage");
+    ds = createDataSet(TEST_POS_LIST, TEST_NEG_LIST, 5, 5, getTestFileName(file_name));
 
     mu_assert("Error during creation of dataset", ds != NULL);
     mu_assert("Num features == 0 ", getFeaturesNum(ds) != 0);
     mu_assert("Wrong images num", getExamplesNum(ds) == 16);
 
-    system("rm -f test_data_set*");
     deleteDataSet(ds);
     return 0;
 }

@@ -1,11 +1,10 @@
 #include "restricted_decision_stump_test.h"
 
 #include "minunit.h"
+#include "test_utils.h"
 #include "restricted_decision_stump.h"
 #include "persistent_float_matrix.h"
 #include "utils.h"
-
-#define RDS_STORAGE_FILE "rds_ds.storage"
 
 static Pfm *getDataForDataSet() {
     Pfm *data;
@@ -16,7 +15,7 @@ static Pfm *getDataForDataSet() {
 	buf[i] = (float)(10 - i);
     }
 
-    data = createPfm(RDS_STORAGE_FILE, 10, 20);
+    WITH_TEST_FILE_NAME(data = createPfm(FILE_NAME_HANDLE, 10, 20));
 
     for (i = 0; i < 20; i++) {
 	storePfmCol(data, buf, i);
@@ -175,8 +174,6 @@ const char *testTrainRds1() {
     Rds rds;
     DataSet *ds;
 
-    system("rm -f " RDS_STORAGE_FILE);
-
     rds = createRds(5);
 
     ds = getDataSet1();
@@ -187,7 +184,6 @@ const char *testTrainRds1() {
     mu_assert("Wrong right_val1", rds.right_val == positive_label);
 
     deleteDataSet(ds);
-    system("rm -f " RDS_STORAGE_FILE);
 
     return 0;
 }
@@ -195,8 +191,6 @@ const char *testTrainRds1() {
 const char *testTrainRds2() {
     Rds rds;
     DataSet *ds;
-
-    system("rm -f " RDS_STORAGE_FILE);
 
     rds = createRds(5);
     ds = getDataSet2();
@@ -207,7 +201,6 @@ const char *testTrainRds2() {
     mu_assert("Wrong right_val2", rds.right_val == negative_label);
 
     deleteDataSet(ds);
-    system("rm -f " RDS_STORAGE_FILE);
 
     return 0;
 }
@@ -215,8 +208,6 @@ const char *testTrainRds2() {
 const char *testTrainRds3() {
     Rds rds;
     DataSet *ds;
-
-    system("rm -f " RDS_STORAGE_FILE);
 
     rds = createRds(5);
     ds = getDataSet3();
@@ -226,7 +217,6 @@ const char *testTrainRds3() {
     mu_assert("Wrong right_val3", rds.right_val == positive_label);
 
     deleteDataSet(ds);
-    system("rm -f " RDS_STORAGE_FILE);
 
     return 0;
 }
@@ -234,8 +224,6 @@ const char *testTrainRds3() {
 const char *testTrainRds4() {
     Rds rds;
     DataSet *ds;
-
-    system("rm -f " RDS_STORAGE_FILE);
 
     rds = createRds(5);
     ds = getDataSet4();
@@ -247,7 +235,6 @@ const char *testTrainRds4() {
     /* mu_assert("Wrong right_val4", rds.right_val == positive_label); */
 
     deleteDataSet(ds);
-    system("rm -f " RDS_STORAGE_FILE);
 
     return 0;
 }
@@ -257,8 +244,6 @@ const char *testClassifyDataWithRds() {
     DataSet *ds;
     Label res_labels[10];
     int i;
-
-    system("rm -f " RDS_STORAGE_FILE);
 
     rds = createRds(5);
 
@@ -272,8 +257,6 @@ const char *testClassifyDataWithRds() {
     }
 
     deleteDataSet(ds);
-    system("rm -f " RDS_STORAGE_FILE);
-
 
     ds = getDataSet3();
     trainRds(&rds, ds);
@@ -285,7 +268,6 @@ const char *testClassifyDataWithRds() {
     }
 
     deleteDataSet(ds);
-    system("rm -f " RDS_STORAGE_FILE);
 
     return 0;
 }
@@ -301,7 +283,7 @@ static Pfm *getDataForDataSet5() {
 	buf[i] = (float)(10 - i);
     }
 
-    data = createPfm(RDS_STORAGE_FILE, 10, 5);
+    WITH_TEST_FILE_NAME(data = createPfm(FILE_NAME_HANDLE, 10, 5));
 
     for (i = 0; i < 5; i++) {
 	storePfmCol(data, buf, i);
@@ -330,8 +312,6 @@ const char *testClassifyDataWithRds2() {
     Label res_labels[10];
     int i;
 
-    system("rm -f " RDS_STORAGE_FILE);
-
     rds = createRds(3);
 
     ds = getDataSet5();
@@ -344,7 +324,6 @@ const char *testClassifyDataWithRds2() {
     }
 
     deleteDataSet(ds);
-    system("rm -f " RDS_STORAGE_FILE);
 
     return 0;
 }

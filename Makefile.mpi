@@ -1,0 +1,5 @@
+MPI_NP ?= 4
+CC := mpicc
+
+VALGRIND_OPTS += --suppressions=mpi.supp
+LAUNCH_OPTS += mpiexec -np $(MPI_NP)

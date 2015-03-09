@@ -1,0 +1,71 @@
+{
+PMPI_leak
+Memcheck:Leak
+match-leak-kinds: all
+...
+fun:PMPI_Init
+...
+}
+{
+ompi_init_leak
+Memcheck:Leak
+match-leak-kinds: all
+fun:malloc
+...
+fun:ompi_mpi_init
+...
+}
+{
+mca_base_init_leak
+Memcheck:Leak
+match-leak-kinds: all
+fun:malloc
+...
+fun:mca_pml_base_open
+...
+}
+{
+mca_base_components_leak
+Memcheck:Leak
+match-leak-kinds: all
+fun:malloc
+...
+fun:mca_base_components_open
+...
+}
+{
+opal_progress_leak
+Memcheck:Leak
+match-leak-kinds: all
+fun:malloc
+...
+fun:opal_progress
+...
+}
+{
+opal_progress_leak
+Memcheck:Leak
+match-leak-kinds: all
+fun:malloc
+...
+fun:opal_event_base_loop
+...
+}
+{
+ompi_modex_recv_key_value_leak
+Memcheck:Leak
+match-leak-kinds: all
+fun:malloc
+...
+fun:ompi_modex_recv_key_value
+...
+}
+{
+PMPI_param
+Memcheck:Param
+writev(vector[...])
+fun:writev
+...
+fun:PMPI_Init
+...
+}
