@@ -8,6 +8,8 @@ void handleError(cl_int err, const char *file, int line) {
 	     file, line, err);
 }
 
+#define ERROR_HANDLE &__error
+
 #define HANDLE_ERROR_RET(call)			    \
     do {					    \
         cl_int error = (call);			    \
@@ -19,7 +21,7 @@ void handleError(cl_int err, const char *file, int line) {
 
 #define HANDLE_ERROR_PAR(call)			    \
     do {					    \
-        cl_int error;				    \
+        cl_int ERROR_HANDLE;			    \
         (call);					    \
         if (error != CL_SUCCESS) {		    \
             handleError(error, __FILE__, __LINE__); \
