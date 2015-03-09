@@ -35,8 +35,8 @@ void initSingleGpuEnvironment() {
     	printf("Found %d devices, env initialized with first one.\n", num_devices);
     }
 
-    HANDLE_ERROR_PAR(context = clCreateContext(NULL, 1, &device, NULL, NULL, ERROR_HANDLE));
-    HANDLE_ERROR_PAR(command_queue = clCreateCommandQueue(context, device, 0, ERROR_HANDLE));
+    HANDLE_ERROR_PAR(context = clCreateContext(NULL, 1, &device, NULL, NULL, &ERROR_HANDLE));
+    HANDLE_ERROR_PAR(command_queue = clCreateCommandQueue(context, device, 0, &ERROR_HANDLE));
 
     ocl_env.platform = platform;
     ocl_env.contexts = malloc(sizeof(OclContext));
